@@ -1,4 +1,5 @@
-## Training and generation settings
+import numpy as np## Training and generation settings
+
 CHECKPOINT_PATH = "/content/drive/MyDrive/models/LPD/"
 MIDI_DIR = "/content/drive/MyDrive/midi_train/Classical/Bach"
 NPZ_DIR = "/content/drive/MyDrive/npz_train/Bach/"

@@ -20,6 +20,8 @@ https://www.intel.com/content/www/us/en/artificial-intelligence/posts/deep-learn
 
 https://console.firebase.google.com/u/1/project/music-generator-9578a/overview
 
+https://www.anaconda.com/
+
 # Repo's
 https://github.com/salu133445/musegan
 
@@ -31,3 +33,13 @@ https://github.com/salu133445/ismir2019tutorial
 # Libs
 https://docs.aiohttp.org/en/stable/index.html
 https://fastapi.tiangolo.com/
+
+
+
+
+# Notes
+- Don't use pipenv (https://chriswarrick.com/blog/2018/07/17/pipenv-promises-a-lot-delivers-very-little/)
+    - Here are some alternatives
+        * https://virtualenvwrapper.readthedocs.io/en/latest/
+        * https://github.com/jazzband/pip-tools
+        * https://github.com/python-poetry/poetry

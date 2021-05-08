@@ -1,3 +1,5 @@
+import torch
+
 ### Model preperarion unit for training and generation
 ## Defining generator and discriminator classes
 

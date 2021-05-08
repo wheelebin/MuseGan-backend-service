@@ -32,10 +32,16 @@ from models import (
     Discriminator,
 )
 
+from dataLoaders.LPD import get_lpd_dataloader
+
+print("Loading LPD data")
+data_loader = get_lpd_dataloader()
 
 ### Preparing to train the network
 # Create neural networks
+print("Setting up discriminator")
 discriminator = Discriminator()
+print("Setting up generator")
 generator = Generator()
 print(
     "Number of parameters in G: {}".format(
@@ -76,6 +82,7 @@ step = 0
 progress_bar = tqdm(total=config.n_steps, initial=step, ncols=80, mininterval=1)
 d_loss_min = 1000
 # Start iterations
+print("Start training")
 while step < config.n_steps + 1:
     # Iterate over the dataset
     for real_samples in data_loader:
@@ -116,14 +123,22 @@ while step < config.n_steps + 1:
                 liveloss.send()
 
             # Display generated samples
-            samples = samples.transpose(1, 0, 2, 3).reshape(config.n_tracks, -1, config.n_pitches)
+            samples = samples.transpose(1, 0, 2, 3).reshape(
+                config.n_tracks, -1, config.n_pitches
+            )
             tracks = []
             for idx, (program, is_drum, track_name) in enumerate(
                 zip(config.programs, config.is_drums, config.track_names)
             ):
                 pianoroll = np.pad(
                     samples[idx] > 0.5,
-                    ((0, 0), (config.lowest_pitch, 128 - config.lowest_pitch - config.n_pitches)),
+                    (
+                        (0, 0),
+                        (
+                            config.lowest_pitch,
+                            128 - config.lowest_pitch - config.n_pitches,
+                        ),
+                    ),
                 )
                 tracks.append(
                     Track(
@@ -133,7 +148,11 @@ while step < config.n_steps + 1:
                         pianoroll=pianoroll,
                     )
                 )
-            m = Multitrack(tracks=tracks, tempo=config.tempo_array, resolution=config.beat_resolution)
+            m = Multitrack(
+                tracks=tracks,
+                tempo=config.tempo_array,
+                resolution=config.beat_resolution,
+            )
             axs = m.plot()
             plt.gcf().set_size_inches((16, 8))
             for ax in axs:
@@ -165,20 +184,28 @@ def generate_midi(generator_parameters, output_filename):
     generator.eval()
     with torch.no_grad():
         samples = generator(sample_latent).cpu().detach().numpy()
-    samples = samples.transpose(1, 0, 2, 3).reshape(config.n_tracks, -1, config.n_pitches)
+    samples = samples.transpose(1, 0, 2, 3).reshape(
+        config.n_tracks, -1, config.n_pitches
+    )
     tracks = []
     for idx, (program, is_drum, track_name) in enumerate(
         zip(config.programs, config.is_drums, config.track_names)
     ):
         pianoroll = np.pad(
-            samples[idx] > 0.5, ((0, 0), (config.lowest_pitch, 128 - config.lowest_pitch - config.n_pitches))
+            samples[idx] > 0.5,
+            (
+                (0, 0),
+                (config.lowest_pitch, 128 - config.lowest_pitch - config.n_pitches),
+            ),
         )
         tracks.append(
             Track(
                 name=track_name, program=program, is_drum=is_drum, pianoroll=pianoroll
             )
         )
-    m = Multitrack(tracks=tracks, tempo=config.tempo_array, resolution=config.beat_resolution)
+    m = Multitrack(
+        tracks=tracks, tempo=config.tempo_array, resolution=config.beat_resolution
+    )
     m.save("out.npz")
     m1 = midi_load("out.npz")
     m1.write(output_filename)
