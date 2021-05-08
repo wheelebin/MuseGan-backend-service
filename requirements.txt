@@ -1,0 +1,9 @@
+torch==1.8.1+cu102
+torchvision==0.9.1+cu102
+torchaudio===0.8.1
+matplotlib
+tqdm
+livelossplot
+gdown
+ipywidgets
+pypianoroll >= 1.0.2

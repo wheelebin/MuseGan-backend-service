@@ -54,5 +54,5 @@ print(f"Data shape : {data.shape}")
 data = torch.as_tensor(data, dtype=torch.float32)
 dataset = torch.utils.data.TensorDataset(data)
 data_loader = torch.utils.data.DataLoader(
-    dataset, config.batch_size=config.batch_size, drop_last=True, shuffle=True
+    dataset, batch_size=config.batch_size, drop_last=True, shuffle=True
 )

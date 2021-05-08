@@ -1,9 +1,5 @@
-
-
-
-
 import torch
-
+import config
 
 ### Functions for training the network
 def compute_gradient_penalty(discriminator, real_samples, fake_samples):
@@ -33,10 +29,10 @@ def compute_gradient_penalty(discriminator, real_samples, fake_samples):
     return gradient_penalty
 
 
-def train_one_step(d_optimizer, g_optimizer, real_samples):
+def train_one_step(discriminator, generator, d_optimizer, g_optimizer, real_samples):
     """Train the networks for one step."""
     # Sample from the lantent distribution
-    latent = torch.randn(batch_size, latent_dim)
+    latent = torch.randn(config.batch_size, config.latent_dim)
 
     # Transfer data to GPU
     if torch.cuda.is_available():

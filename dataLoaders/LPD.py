@@ -45,10 +45,16 @@ def get_lpd_dataloader():
                 id_list.extend([line.rstrip() for line in f])
     id_list = list(set(id_list))
 
+    n = 0
+
     ## Loading data into variables
     data = []
     # Iterate over all the songs in the ID list
     for msd_id in tqdm(id_list):
+        if n > 100:
+            break
+        n = n + 1
+        print(n)
         # Load the multitrack as a pypianoroll.Multitrack instance
         song_dir = dataset_root / msd_id_to_dirs(msd_id)
         multitrack = pypianoroll.load(song_dir / os.listdir(song_dir)[0])
@@ -76,6 +82,9 @@ def get_lpd_dataloader():
             if (pianoroll.sum(axis=(1, 2)) < 10).any():
                 continue
             data.append(pianoroll[:, start:end])
+    
+    print(data)
+    
     # Stack all the collected pianoroll segments into one big array
     random.shuffle(data)
     data = np.stack(data)
@@ -86,6 +95,6 @@ def get_lpd_dataloader():
     data = torch.as_tensor(data, dtype=torch.float32)
     dataset = torch.utils.data.TensorDataset(data)
     data_loader = torch.utils.data.DataLoader(
-        dataset, batch_size=config.batch_size, drop_last=True, shuffle=True
+        dataset, batch_size=config.batch_size, drop_last=True, shuffle=True, num_workers=4, pin_memory=True
     )
     return data_loader
