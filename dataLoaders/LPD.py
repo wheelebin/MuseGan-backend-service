@@ -95,6 +95,6 @@ def get_lpd_dataloader():
     data = torch.as_tensor(data, dtype=torch.float32)
     dataset = torch.utils.data.TensorDataset(data)
     data_loader = torch.utils.data.DataLoader(
-        dataset, batch_size=config.batch_size, drop_last=True, shuffle=True, num_workers=4, pin_memory=True
+        dataset, batch_size=config.batch_size, drop_last=True, shuffle=True, num_workers=0, pin_memory=True
     )
     return data_loader
