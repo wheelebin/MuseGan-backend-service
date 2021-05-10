@@ -34,6 +34,7 @@ from models import (
 
 from dataLoaders.LPD import get_lpd_dataloader
 
+print("IS CUDA AVAILABLE?: ", torch.cuda.is_available())
 print("Loading LPD data")
 
 data_loader = get_lpd_dataloader("data/lp_5_clensed_tensor_dataset.pt")

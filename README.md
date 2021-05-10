@@ -43,3 +43,9 @@ https://fastapi.tiangolo.com/
         * https://virtualenvwrapper.readthedocs.io/en/latest/
         * https://github.com/jazzband/pip-tools
         * https://github.com/python-poetry/poetry
+
+
+
+
+
+https://discuss.pytorch.org/t/runtimeerror-cudnn-error-cudnn-status-not-initialized/115286/2
