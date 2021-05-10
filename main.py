@@ -36,7 +36,7 @@ from dataLoaders.LPD import get_lpd_dataloader
 
 print("Loading LPD data")
 
-data_loader = get_lpd_dataloader()
+data_loader = get_lpd_dataloader("data/lp_5_clensed_tensor_dataset.pt")
 
 ### Generating midi on finished models
 def generate_midi(generator_parameters, output_filename):
@@ -223,15 +223,18 @@ def run():
                 f'{ex_path}Other_model_{modelfile.split("/")[-1].split("_")[0]}_no{idx}.mid',
             )
 
+
 # Todo
 # Download fresh data, data might be corrupt
 # Figure out how to speed up or cache dataLoader
 # Maybe try running this on Ubunut andit'll go faster (See here: https://github.com/pytorch/pytorch/issues/12831)
 
+
 def main():
     run()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
 
 

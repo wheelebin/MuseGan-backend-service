@@ -13,6 +13,10 @@ tqdm = "*"
 livelossplot = "*"
 gdown = "*"
 pypianoroll = ">=1.0.2"
+black = "*"
 
 [requires]
 python_version = "3.6"
+
+[pipenv]
+allow_prereleases = true
