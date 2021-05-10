@@ -132,6 +132,7 @@ def run():
             d_loss, g_loss = training.train_one_step(
                 discriminator, generator, d_optimizer, g_optimizer, real_samples[0]
             )
+            # Save pytorch model
             if d_loss < d_loss_min:
                 torch.save(
                     generator.state_dict(),
@@ -213,6 +214,14 @@ def run():
             if step >= config.n_steps:
                 break
 
+
+    print("Attempting to post training save")
+    torch.save(
+        generator.state_dict(),
+        config.CHECKPOINT_PATH + "final_check_" + str(d_loss),
+    )
+    print("Post training save susccesful!")
+    
     ex_path = "other"
     for modelfile in glob(
         "/content/drive/MyDrive/models/Initial/*tensor*"
