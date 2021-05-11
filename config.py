@@ -1,8 +1,8 @@
 import numpy as np## Training and generation settings
 
-CHECKPOINT_PATH = "/content/drive/MyDrive/models/LPD/"
-MIDI_DIR = "/content/drive/MyDrive/midi_train/Classical/Bach"
-NPZ_DIR = "/content/drive/MyDrive/npz_train/Bach/"
+CHECKPOINT_PATH = "models/LPD/"
+MIDI_DIR = "midi_train/Classical/Bach"
+NPZ_DIR = "npz_train/Bach/"
 # Data
 n_tracks = 5  # number of tracks
 n_pitches = 72  # number of pitches
