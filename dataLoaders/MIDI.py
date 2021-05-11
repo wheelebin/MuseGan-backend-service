@@ -8,9 +8,11 @@ import torch
 import pypianoroll
 from tqdm import tqdm
 
+import config
+
 ## Loading data into variables
 data = []
-for song in tqdm(glob(config.NPZ_DIR + "*.npz")):
+for song in tqdm(glob(config.NPZ_DIR + "/*.npz")):
     # print(song)
     # Load the multitrack as a pypianoroll.Multitrack instance
     multitrack = pypianoroll.load(song)

@@ -14,6 +14,7 @@ setup(
         "tqdm",
         "livelossplot",
         "gdown",
+        "mido",
         "ipywidgets",
         "pypianoroll >= 1.0.2",
     ],

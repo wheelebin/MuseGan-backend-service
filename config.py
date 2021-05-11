@@ -5,11 +5,13 @@ import numpy as np
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-CHECKPOINT_PATH = ROOT_DIR + "/models/LPD/"
-MIDI_DIR = ROOT_DIR + "/midi_train/Classical/Bach/"
-NPZ_DIR = ROOT_DIR + "/npz_train/Bach/"
-DATASET_ROOT_PATH = ROOT_DIR + "/data/lpd_5/lpd_5_cleansed/"
-DATA_DIR = ROOT_DIR + "/data/"
+CHECKPOINT_PATH = ROOT_DIR + "/models/LPD"
+MIDI_DIR = ROOT_DIR + "/midi_train/Classical/Bach"
+NPZ_DIR = ROOT_DIR + "/npz_train/Bach"
+DATASET_ROOT_PATH = ROOT_DIR + "/data/lpd_5/lpd_5_cleansed"
+DATA_DIR = ROOT_DIR + "/data"
+RESULTS_DIR = DATA_DIR + "/results"
+AMG_DIR = DATA_DIR + "/amg"
 
 # Data
 n_tracks = 5  # number of tracks

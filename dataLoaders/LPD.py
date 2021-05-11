@@ -24,10 +24,10 @@ def get_lpd_dataloader(pt_file_path=""):
         print("CREATE TENSOR DATASET")
         """Prepairing data based on LPD"""
         dataset_root = Path(config.DATASET_ROOT_PATH)
-        amg_root = config.DATA_DIR + "amg"
+        
         id_list = []
-        for path in os.listdir(amg_root):
-            filepath = os.path.join(amg_root, path)
+        for path in os.listdir(config.AMG_DIR):
+            filepath = os.path.join(config.AMG_DIR, path)
             if os.path.isfile(filepath):
                 with open(filepath) as f:
                     id_list.extend([line.rstrip() for line in f])

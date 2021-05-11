@@ -83,7 +83,9 @@ I need to find a way to easily:
 1. Clone this repo & cd into it
 2. Create a virtualenv & activate it
 3. Install pip-tools
-4. Cd into src and run pip-compile & pip-sync
-    * Since the torch+cu101 requires an external link, pip-compile has to be ran like with a --find-links option like the following ( pip-compile src/setup.py --find-links https://download.pytorch.org/whl/torch_stable.html )
+4. Run pip-sync to install packages
     * This torch version is installing with cuda, if you don't have a GPU which is supported by cuda than install the CPU version of torch.
 5. Run python main.py
+
+# TODO
+- Make sure all outputed files are uniquely named
