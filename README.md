@@ -64,3 +64,26 @@ https://github.com/MicrosoftDocs/azure-docs/blob/master/articles/machine-learnin
 
 # This version of torch
 (1.7.0+cu101)
+
+## Different states of this application
+This project is used to train our model, run predictions on our model and handle restful API requests (responding with predictions).
+I need to find a way to easily:
+- Train
+- Predict without API
+- Start web service with access to predictions
+
+
+
+## Prerequisites
+* Make sure that you have python installed
+* Make sure that you have the packages pip, virtualenv installed
+
+
+## Installation Steps
+1. Clone this repo & cd into it
+2. Create a virtualenv & activate it
+3. Install pip-tools
+4. Cd into src and run pip-compile & pip-sync
+    * Since the torch+cu101 requires an external link, pip-compile has to be ran like with a --find-links option like the following ( pip-compile src/setup.py --find-links https://download.pytorch.org/whl/torch_stable.html )
+    * This torch version is installing with cuda, if you don't have a GPU which is supported by cuda than install the CPU version of torch.
+5. Run python main.py
