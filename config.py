@@ -9,7 +9,9 @@ CHECKPOINT_PATH = ROOT_DIR + "/models/LPD"
 MIDI_DIR = ROOT_DIR + "/midi_train/Classical/Bach"
 NPZ_DIR = ROOT_DIR + "/npz_train/Bach"
 DATASET_ROOT_PATH = ROOT_DIR + "/data/lpd_5/lpd_5_cleansed"
+
 DATA_DIR = ROOT_DIR + "/data"
+SOUNDFONTS_DIR = DATA_DIR + "/soundfonts"
 RESULTS_DIR = DATA_DIR + "/results"
 AMG_DIR = DATA_DIR + "/amg"
 

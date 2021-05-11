@@ -77,6 +77,12 @@ I need to find a way to easily:
 ## Prerequisites
 * Make sure that you have python installed
 * Make sure that you have the packages pip, virtualenv installed
+* Install Fluidsynth
+* Data
+    * Download LPD dataset if creating new tensor dataset
+    * Download .pt if loading existing tensor dataset for training model 
+    * Download checkpoints loading exisiting model
+    * Download synth files for midi2audo (Optional, this uses Fluidsynth)
 
 
 ## Installation Steps

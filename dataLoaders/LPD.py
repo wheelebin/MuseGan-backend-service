@@ -85,7 +85,12 @@ def get_lpd_dataloader(pt_file_path=""):
         torch.save(dataset, "lp_5_clensed_tensor_dataset.pt")
     else:
         print("LOAD TENSOR DATASET: ", pt_file_path)
-        dataset = torch.load(pt_file_path)
+
+        map_location = None
+        if torch.cuda.is_available() is False: # TODO Move the cuda.is_available() calls to the config file and have it set once on startup
+            map_location = torch.device("cpu")
+
+        dataset = torch.load(pt_file_path, map_location)
 
     data_loader = torch.utils.data.DataLoader(
         dataset,

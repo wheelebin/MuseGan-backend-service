@@ -18,25 +18,28 @@ def get_file_name():
 
 
 def init_generator(generator_file_path):
-    #NOTE: Maybe this should live somewhere else
+    # NOTE: Maybe this should live somewhere else
+
     generator = Generator()
+    map_location = None
 
     if torch.cuda.is_available():
         generator = generator.cuda()
+    else:
+        map_location = torch.device("cpu")
 
-    generator.load_state_dict(torch.load(generator_file_path))
-    generator.eval() #NOTE: I might consider moving this and forcing you to evail the model yourself
+    generator.load_state_dict(torch.load(generator_file_path, map_location))
+    generator.eval()  # NOTE: I might consider moving this and forcing you to evail the model yourself
     return generator
 
 
 ### Generating midi on finished models
 def predict(generator):
-    
-    file_name = get_file_name()
-    output_npz_filename = "%s/%s.npz" % (config.RESULTS_DIR, file_name)
-    output_midi_filename = "%s/%s.mid" % (config.RESULTS_DIR, file_name)
 
-    
+    file_name = "%s/%s" % (config.RESULTS_DIR, get_file_name())
+    output_npz_filename = file_name + ".npz"
+    output_midi_filename = file_name + ".mid"
+
     sample_latent = torch.randn(config.n_samples, config.latent_dim)
     if torch.cuda.is_available():
         sample_latent = sample_latent.cuda()
@@ -72,3 +75,5 @@ def predict(generator):
     # Load .npz & write .mid
     m1 = midi_load(output_npz_filename)
     m1.write(output_midi_filename)
+
+    return (file_name, output_midi_filename, output_npz_filename)

@@ -1,7 +1,7 @@
 import os
 from glob import glob
 from mido import MidiFile, MidiTrack, tick2second, MetaMessage
-from pianoroll import Multitrack
+from pypianoroll import Multitrack
 import music21 as m21
 import random
 from midi2audio import FluidSynth
