@@ -1,5 +1,5 @@
 {
     "python.formatting.provider": "black",
     "python.linting.enabled": true,
-    "python.pythonPath": "/home/joakim/.local/share/virtualenvs/MuseGan-backend-service-_n7xYsXi/bin/python"
+    "python.pythonPath": "/home/azureuser/.pyenv/versions/3.6.4/bin/python"
 }
