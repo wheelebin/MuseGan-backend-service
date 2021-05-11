@@ -21,11 +21,15 @@ certifi==2020.12.5
 cffi==1.14.5
     # via argon2-cffi
 chardet==4.0.0
-    # via requests
+    # via
+    #   music21
+    #   requests
 cycler==0.10.0
     # via matplotlib
 dataclasses==0.8
-    # via torch
+    # via
+    #   pydantic
+    #   torch
 decorator==5.0.7
     # via
     #   ipython
@@ -34,6 +38,8 @@ defusedxml==0.7.1
     # via nbconvert
 entrypoints==0.3
     # via nbconvert
+fastapi==0.65.0
+    # via MuseGAN-Restful-API (setup.py)
 filelock==3.0.12
     # via gdown
 future==0.18.2
@@ -67,6 +73,8 @@ jinja2==2.11.3
     #   bokeh
     #   nbconvert
     #   notebook
+joblib==1.0.1
+    # via music21
 jsonschema==3.2.0
     # via nbformat
 jupyter-client==6.1.12
@@ -95,12 +103,18 @@ matplotlib==3.3.4
     #   MuseGAN-Restful-API (setup.py)
     #   livelossplot
     #   pypianoroll
+midi2audio==0.1.1
+    # via MuseGAN-Restful-API (setup.py)
 mido==1.2.10
     # via
     #   MuseGAN-Restful-API (setup.py)
     #   pretty-midi
 mistune==0.8.4
     # via nbconvert
+more-itertools==8.7.0
+    # via music21
+music21==6.7.1
+    # via MuseGAN-Restful-API (setup.py)
 nbclient==0.5.3
     # via nbconvert
 nbconvert==6.0.7
@@ -152,6 +166,8 @@ ptyprocess==0.7.0
     #   terminado
 pycparser==2.20
     # via cffi
+pydantic==1.8.1
+    # via fastapi
 pygments==2.9.0
     # via
     #   ipython
@@ -194,6 +210,8 @@ six==1.16.0
     #   pretty-midi
     #   python-dateutil
     #   traitlets
+starlette==0.14.2
+    # via fastapi
 terminado==0.9.5
     # via notebook
 testpath==0.4.4
@@ -226,11 +244,14 @@ typing-extensions==3.10.0.0
     # via
     #   bokeh
     #   importlib-metadata
+    #   pydantic
     #   torch
 urllib3==1.26.4
     # via requests
 wcwidth==0.2.5
     # via prompt-toolkit
+webcolors==1.11.1
+    # via music21
 webencodings==0.5.1
     # via bleach
 widgetsnbextension==3.5.1
