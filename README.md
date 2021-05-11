@@ -35,6 +35,10 @@ https://docs.aiohttp.org/en/stable/index.html
 https://fastapi.tiangolo.com/
 
 
+# REST API
+https://github.com/pytorch/tutorials/blob/master/intermediate_source/flask_rest_api_tutorial.py
+https://pytorch.org/tutorials/intermediate/flask_rest_api_tutorial.html
+https://libiseller.ai/deploying-pytorch-to-production
 
 
 # Notes
@@ -45,7 +49,16 @@ https://fastapi.tiangolo.com/
         * https://github.com/python-poetry/poetry
 
 
+# Other intresting links
+Fake anime using DCGAN - https://www.youtube.com/watch?v=cqXKTC4IP10
+Building our first simple GAN - https://www.youtube.com/watch?v=OljTVUVzPpM
+Sentdex - https://www.youtube.com/channel/UCfzlCWGWYyIQ0aLC5w48gBQ/videos
 
-
+https://github.com/onnx/tutorials
 
 https://discuss.pytorch.org/t/runtimeerror-cudnn-error-cudnn-status-not-initialized/115286/2
+
+https://github.com/MicrosoftDocs/azure-docs/blob/master/articles/machine-learning/how-to-train-pytorch.md
+
+# This version of torch
+(1.7.0+cu101)
