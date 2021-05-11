@@ -1,5 +1,0 @@
-{
-    "python.formatting.provider": "black",
-    "python.linting.enabled": true,
-    "python.pythonPath": "/home/azureuser/.pyenv/versions/3.6.4/bin/python"
-}
