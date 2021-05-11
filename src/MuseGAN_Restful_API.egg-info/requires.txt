@@ -1,7 +1,0 @@
-torch==1.7.0+cu101
-matplotlib
-tqdm
-livelossplot
-gdown
-ipywidgets
-pypianoroll>=1.0.2

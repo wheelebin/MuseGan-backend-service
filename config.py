@@ -1,8 +1,16 @@
-import numpy as np## Training and generation settings
 
-CHECKPOINT_PATH = "models/LPD/"
-MIDI_DIR = "midi_train/Classical/Bach"
-NPZ_DIR = "npz_train/Bach/"
+import os
+import numpy as np
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+CHECKPOINT_PATH = "../models/LPD/"
+MIDI_DIR = "../midi_train/Classical/Bach"
+NPZ_DIR = "../npz_train/Bach/"
+DATASET_ROOT_PATH = "../data/lpd_5/lpd_5_cleansed/"
+DATA_DIR = "../data/"
+
 # Data
 n_tracks = 5  # number of tracks
 n_pitches = 72  # number of pitches

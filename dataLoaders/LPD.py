@@ -5,27 +5,11 @@ from pathlib import Path
 from glob import glob
 
 import numpy as np
-import matplotlib.pyplot as plt
 import torch
 import pypianoroll
 from tqdm import tqdm
 
-from pypianoroll import read as midi_read
-
-
 import config
-
-
-def convert_to_npz(input_folder, output_folder):
-    """I feel like this is more of a utility function"""
-    for idx, song in enumerate(tqdm(Path(input_folder).glob("**/*.mid"))):
-        # print(song)
-        try:
-            m = midi_read(song)
-        except BaseException:
-            continue
-        # print(m)
-        m.save(output_folder + f"/{idx:06}.npz")
 
 
 def msd_id_to_dirs(msd_id):
@@ -36,10 +20,10 @@ def msd_id_to_dirs(msd_id):
 
 def get_lpd_dataloader(pt_file_path=""):
     dataset = None
-    if (pt_file_path is ""):
+    if pt_file_path is "":
         print("CREATE TENSOR DATASET")
         """Prepairing data based on LPD"""
-        dataset_root = Path("data/lpd_5/lpd_5_cleansed/")
+        dataset_root = Path(config.DATASET_ROOT_PATH)
         id_list = []
         for path in os.listdir("data/amg"):
             filepath = os.path.join("data/amg", path)
@@ -85,26 +69,29 @@ def get_lpd_dataloader(pt_file_path=""):
                 if (pianoroll.sum(axis=(1, 2)) < 10).any():
                     continue
                 data.append(pianoroll[:, start:end])
-        
+
         print(data)
-        
+
         # Stack all the collected pianoroll segments into one big array
         random.shuffle(data)
         data = np.stack(data)
         print(f"Successfully collect {len(data)} samples from {len(id_list)} songs")
         print(f"Data shape : {data.shape}")
 
-    
-
         ## We create a dataset and a data loader to the network
         data = torch.as_tensor(data, dtype=torch.float32)
         dataset = torch.utils.data.TensorDataset(data)
-        torch.save(dataset, 'lp_5_clensed_tensor_dataset.pt')
+        torch.save(dataset, "lp_5_clensed_tensor_dataset.pt")
     else:
         print("LOAD TENSOR DATASET: ", pt_file_path)
         dataset = torch.load(pt_file_path)
-    
+
     data_loader = torch.utils.data.DataLoader(
-        dataset, batch_size=config.batch_size, drop_last=True, shuffle=True, num_workers=0, pin_memory=True
+        dataset,
+        batch_size=config.batch_size,
+        drop_last=True,
+        shuffle=True,
+        num_workers=0,
+        pin_memory=True,
     )
     return data_loader
