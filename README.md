@@ -34,6 +34,8 @@ https://github.com/salu133445/ismir2019tutorial
 https://docs.aiohttp.org/en/stable/index.html
 https://fastapi.tiangolo.com/
 
+SCREEN CHEAT SHEET - https://kapeli.com/cheat_sheets/screen.docset/Contents/Resources/Documents/index
+
 
 # REST API
 https://github.com/pytorch/tutorials/blob/master/intermediate_source/flask_rest_api_tutorial.py
