@@ -223,15 +223,15 @@ def run():
     )
     print("Post training save susccesful!")
     
-    ex_path = "other"
-    for modelfile in glob(
-        "models/initial/*tensor*"
-    ):  # What to do with this path?
-        for idx in range(5):
-            generate_midi(
-                modelfile,
-                f'{ex_path}Other_model_{modelfile.split("/")[-1].split("_")[0]}_no{idx}.mid',
-            )
+    #ex_path = "other"
+    #for modelfile in glob(
+    #    "models/initial/*tensor*"
+    #):  # What to do with this path?
+    #    for idx in range(5):
+    #        generate_midi(
+    #            modelfile,
+    #            f'{ex_path}Other_model_{modelfile.split("/")[-1].split("_")[0]}_no{idx}.mid',
+    #        )
 
 
 # Todo
