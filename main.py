@@ -225,7 +225,7 @@ def run():
     
     ex_path = "other"
     for modelfile in glob(
-        "/content/drive/MyDrive/models/Initial/*tensor*"
+        "models/initial/*tensor*"
     ):  # What to do with this path?
         for idx in range(5):
             generate_midi(
