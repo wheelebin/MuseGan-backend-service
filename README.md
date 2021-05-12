@@ -94,4 +94,10 @@ I need to find a way to easily:
 5. Run python main.py
 
 # TODO
-- Make sure all outputed files are uniquely named
+- Make sure all outputed files are uniquely named´
+- Make sure these functions work
+    - Gluing and trimming midi for a certain predetermined time in seconds, implemented the ability to use templates in the file name, so only generated midis can be glued in one of 4 ways
+    - Replacing notes with chords, you can set in which track or tracks to change and select a major or minor triad
+    - Changing instruments by tracks
+
+    - Convert midi to wav using various sound fonts in sf2 format. [DONE]

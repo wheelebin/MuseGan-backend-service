@@ -7,9 +7,17 @@ from fastapi.responses import FileResponse
 # Custom imports
 import config
 from predictions import predict, init_generator
-from utilities import make_project_dirs
-from midi_utilities import convert_midi_to_wav, notes_to_chords
+from utilities import make_project_dirs, plot_pianoroll
+from midi_utilities import convert_midi_to_wav, notes_to_chords, change_instruments
 
+#%%
+from utilities import make_project_dirs, plot_pianoroll
+
+
+print("Plot pianoroll")
+plot_pianoroll("data/results/c9939344-085c-4a3d-bec5-ba02cdaeb9be.mid", "mid")
+print("Finished plotting pianoroll")
+#%%
 
 # Todo
 # Organize project code into a flat structure inside of src
@@ -20,10 +28,16 @@ def run_generation(generator):
     print(file_name, output_midi_filename, output_npz_filename)
 
     # TODO this is not working so make check to see why this wont create a playable wav and if any other methods are messing up
-    # notes_to_chords(output_midi_filename, file_name + "_chords.mid")
+    notes_to_chords(output_midi_filename, file_name + "_chords.mid")
+
+    # change_instruments(output_midi_filename, file_name + ".mid", )
 
     convert_midi_to_wav(
-        output_midi_filename, file_name + ".wav" 
+       output_midi_filename, file_name + ".wav"
+    )  # , config.SOUNDFONTS_DIR + "/kit3.sf2"
+
+    convert_midi_to_wav(
+        file_name + "_chords.mid", file_name + "_chords.wav"
     )  # , config.SOUNDFONTS_DIR + "/kit3.sf2"
 
 

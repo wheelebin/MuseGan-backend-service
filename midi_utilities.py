@@ -1,7 +1,7 @@
 import os
 from glob import glob
 from mido import MidiFile, MidiTrack, tick2second, MetaMessage
-from pypianoroll import Multitrack
+from pypianoroll import Multitrack, track
 import music21 as m21
 import random
 from midi2audio import FluidSynth
@@ -277,11 +277,14 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
     # Copying the time metrics between both files
     output_midi.ticks_per_beat = input_midi.ticks_per_beat
 
+    #print(input_midi.tracks)
+
     for track_n, original_track in enumerate(input_midi.tracks):
-      if track_n in  tracks:
+      if track_n in tracks:
         new_track = MidiTrack()
         cur = []
         for idx, msg in enumerate(original_track):
+          print(msg.type)
           if msg.type == "note_on":
             cur.append(msg)
           elif msg.type == "note_off":
@@ -310,8 +313,13 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
           else:
             new_track.append(msg)
         output_midi.tracks.append(new_track)
-
     output_midi.save(output_file)
+
+    #print("OUTPUT MID")  
+    #print(output_midi)
+
+    #print("INPUT MID")  
+    #print(input_midi)
 
 def change_instruments(input_file, output_file, new_instruments):
   """
