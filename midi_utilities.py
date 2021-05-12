@@ -290,25 +290,15 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
             # Make sure that we only modify wanted midi track
 
             new_track = MidiTrack()
-            cur = []
+            
             for idx, msg in enumerate(original_track):
                 # Loop through each message in original track
                 # Good to know:
                 # note_on & note_off represent veolocity.
                 #   (A note_on message with zero velocity will also be counted as note_off)
 
-                print(msg.type)
-                #if msg.type == "note_on":
-                #    cur.append(msg)
-                #elif msg.type == "note_off":
-                #    cur.append(msg)
                 if msg.type in ["note_on", "note_off"]:
-                    #cur.append(msg)
-                    #if len(cur) != 2:
-                    #    for el in cur:
-                    #        new_track.append(el)
-                    #    cur = []
-                    #else:
+                    # Only try to make chords of our note messages
                     note = msg.note
                     if chords == "major":
                         new_track.append(msg.copy())
@@ -324,17 +314,10 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
                         new_track.append(msg)
                         new_track.append(msg.copy(note=note + 3, time=0))
                         new_track.append(msg.copy(note=note + 7, time=0))
-                    cur = []
                 else:
                     new_track.append(msg)
             output_midi.tracks.append(new_track)
     output_midi.save(output_file)
-
-    # print("OUTPUT MID")
-    # print(output_midi)
-
-    # print("INPUT MID")
-    # print(input_midi)
 
 
 def change_instruments_to_piano(input_file, output_file, new_instruments_by_track):
