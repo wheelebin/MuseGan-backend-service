@@ -49,7 +49,7 @@ def run_generation(generator):
     )  # , config.SOUNDFONTS_DIR + "/kit3.sf2"
 
     convert_midi_to_wav(
-        file_name + "_pianos.mid", file_name + "_pianos.wav"
+        file_name + "_chords.mid", file_name + "_chords.wav"
     )  # , config.SOUNDFONTS_DIR + "/kit3.sf2"
 
 

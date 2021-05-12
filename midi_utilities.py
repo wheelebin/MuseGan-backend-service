@@ -285,7 +285,6 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
 
     for track_n, original_track in enumerate(input_midi.tracks):
         # Loop through tracks in MIDI file
-        pprint(original_track)
 
         if track_n in tracks:
             # Make sure that we only modify wanted midi track
@@ -299,31 +298,33 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
                 #   (A note_on message with zero velocity will also be counted as note_off)
 
                 print(msg.type)
-                if msg.type == "note_on":
-                    cur.append(msg)
-                elif msg.type == "note_off":
-                    cur.append(msg)
-                    if len(cur) != 2:
-                        for el in cur:
-                            new_track.append(el)
-                        cur = []
-                    else:
-                        note = cur[0].note
-                        if chords == "major":
-                            new_track.append(cur[0].copy())
-                            new_track.append(cur[0].copy(note=note + 4, time=0))
-                            new_track.append(cur[0].copy(note=note + 7, time=0))
-                            new_track.append(cur[1])
-                            new_track.append(cur[1].copy(note=note + 4, time=0))
-                            new_track.append(cur[1].copy(note=note + 7, time=0))
-                        elif chords == "minor":
-                            new_track.append(cur[0].copy())
-                            new_track.append(cur[0].copy(note=note + 3, time=0))
-                            new_track.append(cur[0].copy(note=note + 7, time=0))
-                            new_track.append(cur[1])
-                            new_track.append(cur[1].copy(note=note + 3, time=0))
-                            new_track.append(cur[1].copy(note=note + 7, time=0))
-                        cur = []
+                #if msg.type == "note_on":
+                #    cur.append(msg)
+                #elif msg.type == "note_off":
+                #    cur.append(msg)
+                if msg.type in ["note_on", "note_off"]:
+                    #cur.append(msg)
+                    #if len(cur) != 2:
+                    #    for el in cur:
+                    #        new_track.append(el)
+                    #    cur = []
+                    #else:
+                    note = msg.note
+                    if chords == "major":
+                        new_track.append(msg.copy())
+                        new_track.append(msg.copy(note=note + 4, time=0))
+                        new_track.append(msg.copy(note=note + 7, time=0))
+                        new_track.append(msg)
+                        new_track.append(msg.copy(note=note + 4, time=0))
+                        new_track.append(msg.copy(note=note + 7, time=0))
+                    elif chords == "minor":
+                        new_track.append(msg.copy())
+                        new_track.append(msg.copy(note=note + 3, time=0))
+                        new_track.append(msg.copy(note=note + 7, time=0))
+                        new_track.append(msg)
+                        new_track.append(msg.copy(note=note + 3, time=0))
+                        new_track.append(msg.copy(note=note + 7, time=0))
+                    cur = []
                 else:
                     new_track.append(msg)
             output_midi.tracks.append(new_track)
