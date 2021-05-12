@@ -290,7 +290,7 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
             # Make sure that we only modify wanted midi track
 
             new_track = MidiTrack()
-            
+
             for idx, msg in enumerate(original_track):
                 # Loop through each message in original track
                 # Good to know:
@@ -320,41 +320,38 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
     output_midi.save(output_file)
 
 
-def change_instruments_to_piano(input_file, output_file, new_instruments_by_track):
+def change_instruments(input_file, output_file, new_instruments_by_track):
     """
     Changes every instrument to piano, except the drums
     input_file - File to midi file
     output_file - File for new midi file
     new_instruments_by_track - Structure describing which track to be replaced and with what program { track_id: program_number }
+    See program number here https://en.wikipedia.org/wiki/General_MIDI
     """
-    try:
-        mid = MidiFile(input_file)
-    except:
-        return None
+    mid = MidiFile(input_file)
 
     out = MidiFile()
     out.ticks_per_beat = mid.ticks_per_beat
 
     for track_i, track in enumerate(mid.tracks):
+        # Loop through each track
+
         new_track = MidiTrack()
+
         for message in track:
-            if message.type == "program_change":
-                if message.program != 10 and track_i in new_instruments_by_track:
-                    print("PRE: ", track_i, message)
-                    new_track.append(
-                        message.copy(program=new_instruments_by_track[track_i])
-                    )
-                    print(
-                        "POST: ",
-                        message.copy(program=new_instruments_by_track[track_i]),
-                    )
-                    continue
-            new_track.append(message)
+            # Loop through each message in track
+            # Modify with program_change message and append or just append 
+
+            if message.type == "program_change" and track_i in new_instruments_by_track:
+                new_track.append(
+                    message.copy(program=new_instruments_by_track[track_i])
+                )
+            else:
+                new_track.append(message)
+
         out.tracks.append(new_track)
-    try:
-        out.save(output_file)
-    except:
-        pass
+
+    out.save(output_file)
 
 
 def convert_midi_to_wav(input_file, output_file, soundfont=""):

@@ -14,7 +14,7 @@ from utilities import make_project_dirs, plot_pianoroll
 from midi_utilities import (
     convert_midi_to_wav,
     notes_to_chords,
-    change_instruments_to_piano,
+    change_instruments,
 )
 
 #%%
@@ -38,18 +38,18 @@ def run_generation(generator):
     notes_to_chords(output_midi_filename, file_name + "_chords.mid")
 
 
-    # change_instruments_to_piano(
-    #     output_midi_filename,
-    #     file_name + "_pianos.mid",
-    #     {1: 76, 2: 76, 3: 76, 4: 76, 5: 76},
-    # )
+    change_instruments(
+        output_midi_filename,
+        file_name + "_pianos.mid",
+        { 5: 5},
+    )
 
     convert_midi_to_wav(
         output_midi_filename, file_name + ".wav"
     )  # , config.SOUNDFONTS_DIR + "/kit3.sf2"
 
     convert_midi_to_wav(
-        file_name + "_chords.mid", file_name + "_chords.wav"
+        file_name + "_pianos.mid", file_name + "_pianos.wav"
     )  # , config.SOUNDFONTS_DIR + "/kit3.sf2"
 
 
