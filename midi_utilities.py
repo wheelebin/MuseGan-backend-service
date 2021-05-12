@@ -5,6 +5,7 @@ from pypianoroll import Multitrack, track
 import music21 as m21
 import random
 from midi2audio import FluidSynth
+import pprint
 
 
 def cut_midi(input_file, output_file, start_time, end_time):
@@ -104,7 +105,10 @@ def join_midi_to_length(input_folder, output_file, length):
                 tracks_length.append(0)
             for msg in original_track:
                 new_tracks[track_n].append(msg)
-                if msg.type in ["note_on", "note_off"]:
+                if msg.type in [
+                    "note_on",
+                    "note_off",
+                ]:  # TODO check and see if this is the way to implement notes_to_chords
                     tracks_length[track_n] += tick2second(
                         msg.time, input_midi.ticks_per_beat, tempo
                     )
@@ -279,13 +283,21 @@ def notes_to_chords(input_file, output_file, tracks=[1, 2, 3, 4, 5], chords="maj
     # Copying the time metrics between both files
     output_midi.ticks_per_beat = input_midi.ticks_per_beat
 
-    # print(input_midi.tracks)
-
     for track_n, original_track in enumerate(input_midi.tracks):
+        # Loop through tracks in MIDI file
+        pprint(original_track)
+
         if track_n in tracks:
+            # Make sure that we only modify wanted midi track
+
             new_track = MidiTrack()
             cur = []
             for idx, msg in enumerate(original_track):
+                # Loop through each message in original track
+                # Good to know:
+                # note_on & note_off represent veolocity.
+                #   (A note_on message with zero velocity will also be counted as note_off)
+
                 print(msg.type)
                 if msg.type == "note_on":
                     cur.append(msg)
@@ -348,7 +360,10 @@ def change_instruments_to_piano(input_file, output_file, new_instruments_by_trac
                     new_track.append(
                         message.copy(program=new_instruments_by_track[track_i])
                     )
-                    print("POST: ", message.copy(program=new_instruments_by_track[track_i]))
+                    print(
+                        "POST: ",
+                        message.copy(program=new_instruments_by_track[track_i]),
+                    )
                     continue
             new_track.append(message)
         out.tracks.append(new_track)

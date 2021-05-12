@@ -35,15 +35,14 @@ def run_generation(generator):
     print(file_name, output_midi_filename, output_npz_filename)
 
     # TODO this is not working so make check to see why this wont create a playable wav and if any other methods are messing up
-    # notes_to_chords(output_midi_filename, file_name + "_chords.mid")
+    notes_to_chords(output_midi_filename, file_name + "_chords.mid")
 
-    # change_instruments(output_midi_filename, file_name + ".mid", m21.instrument.Violin())
 
-    change_instruments_to_piano(
-        output_midi_filename,
-        file_name + "_pianos.mid",
-        {1: 76, 2: 76, 3: 76, 4: 76, 5: 76},
-    )
+    # change_instruments_to_piano(
+    #     output_midi_filename,
+    #     file_name + "_pianos.mid",
+    #     {1: 76, 2: 76, 3: 76, 4: 76, 5: 76},
+    # )
 
     convert_midi_to_wav(
         output_midi_filename, file_name + ".wav"
