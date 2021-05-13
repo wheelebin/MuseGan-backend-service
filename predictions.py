@@ -7,14 +7,11 @@ import uuid
 from glob import glob
 
 import config
+from utilities import get_file_name_for_saving
 
 from models import (
     Generator,
 )
-
-
-def get_file_name():
-    return str(uuid.uuid4())
 
 
 def init_generator(generator_file_path):
@@ -34,11 +31,10 @@ def init_generator(generator_file_path):
 
 
 ### Generating midi on finished models
-def predict(generator):
+def predict(generator, file_name):
 
-    file_name = "%s/%s" % (config.RESULTS_DIR, get_file_name())
-    output_npz_filename = file_name + ".npz"
-    output_midi_filename = file_name + ".mid"
+    file_name, output_npz_filename, *_ = get_file_name_for_saving("npz", file_name)
+    file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
 
     sample_latent = torch.randn(config.n_samples, config.latent_dim)
     if torch.cuda.is_available():

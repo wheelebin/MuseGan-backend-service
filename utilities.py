@@ -1,4 +1,5 @@
 import os
+import uuid
 from pathlib import Path
 from tqdm import tqdm
 from pypianoroll import read as midi_read
@@ -15,12 +16,13 @@ from config import (
 )
 import matplotlib.pyplot as plt
 
+import config
+
 
 def msd_id_to_dirs(msd_id):
     """Given an MSD ID, generate the path prefix.
     E.g. TRABCD12345678 -> A/B/C/TRABCD12345678"""
     return os.path.join(msd_id[2], msd_id[3], msd_id[4], msd_id)
-
 
 
 def make_project_dirs():
@@ -63,3 +65,26 @@ def plot_pianoroll(file_path, file_type="npz"):
             ax.axvline(x - 0.5, color="k", linestyle="-", linewidth=1)
     plt.show()
 
+
+def get_file_name():
+    return str(uuid.uuid4())
+
+
+def get_file_name_for_saving(file_extension=None, file_name=None, operation=None):
+    """
+    file_extension - Which extension file should be saved as
+    """
+
+    if file_extension is not None and file_extension not in ["npz", "wav", "mid"]:
+        raise Exception("The file extension, %s, is not supported!" % file_extension)
+
+    if file_name is None:
+        file_name = get_file_name()
+
+    if operation:
+        file_name = "%s_%s" % (file_name, operation)
+
+    path = config.RESULTS_DIR
+    file_path = "%s/%s.%s" % (path, file_name, file_extension)
+
+    return (file_name, file_path, path)
