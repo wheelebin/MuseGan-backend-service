@@ -394,7 +394,6 @@ def cut_midi_in_measures(input_file, n_bins=4, n_parts=10):
     Cuts midi files by n_bins partitions.
     """
     midifile = open_midi(input_file)
-    print("File opened")
     for i in range(n_parts):
         try:
             midi_temp = m21.stream.Score()

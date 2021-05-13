@@ -97,7 +97,14 @@ I need to find a way to easily:
 - Make sure all outputed files are uniquely named
 - Make sure these functions work
     - Gluing and trimming midi for a certain predetermined time in seconds, implemented the ability to use templates in the file name, so only generated midis can be glued in one of 4 ways
+    
+    - Save & load methods for files .npz & .mid files
+    - Maybe the service which is responisble for generating a file name should be some service, which takes care of loading, saving, naming and etc safeley and can be used 
+    - Service for orchestrating the neccesary actions
 
     - Replacing notes with chords, you can set in which track or tracks to change and select a major or minor triad [DONE]
-    - Changing instruments by tracks [DONE] (I think)
+    - Changing instruments by tracks [DONE]
     - Convert midi to wav using various sound fonts in sf2 format. [DONE]
+
+
+# Notes

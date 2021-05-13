@@ -22,6 +22,7 @@ def msd_id_to_dirs(msd_id):
     return os.path.join(msd_id[2], msd_id[3], msd_id[4], msd_id)
 
 
+
 def make_project_dirs():
     project_dirs = [
         CHECKPOINT_PATH,
@@ -61,3 +62,4 @@ def plot_pianoroll(file_path, file_type="npz"):
         for x in range(96, 12 * 96, 96):
             ax.axvline(x - 0.5, color="k", linestyle="-", linewidth=1)
     plt.show()
+
