@@ -43,3 +43,22 @@ def rename_files(input_folder):
     for filename in file_list:
         os.rename(filename, input_folder + f"kit{idx}.sf2")
         idx += 1
+
+
+def change_instruments(input_file, output_file, new_instruments):
+  """
+  Opens midi file from input_file, change its instruments to new_instruments. 
+  The new instruments should be a list with 5 music21.instrument.Instrument objects. 
+  For example instrument.Piano(), instrument.Bass() and so on.
+  Function saves file in output_file path.
+  """
+
+  # This one sucks and does not work
+  s = open_midi(input_file)
+  for i, part in enumerate(s):
+    for el in part.recurse():
+      if isinstance(el, m21.instrument.Instrument):
+        try:
+          el.activeSite.replace(el, new_instruments[i])
+        except BaseException:
+          el.activeSite.replace(el, m21.instrument.Piano())

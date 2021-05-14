@@ -11,11 +11,7 @@ from tqdm import tqdm
 
 import config
 
-
-def msd_id_to_dirs(msd_id):
-    """Given an MSD ID, generate the path prefix.
-    E.g. TRABCD12345678 -> A/B/C/TRABCD12345678"""
-    return os.path.join(msd_id[2], msd_id[3], msd_id[4], msd_id)
+from utilities import msd_id_to_dirs
 
 
 def get_lpd_dataloader(pt_file_path=""):
@@ -24,7 +20,7 @@ def get_lpd_dataloader(pt_file_path=""):
         print("CREATE TENSOR DATASET")
         """Prepairing data based on LPD"""
         dataset_root = Path(config.DATASET_ROOT_PATH)
-        
+
         id_list = []
         for path in os.listdir(config.AMG_DIR):
             filepath = os.path.join(config.AMG_DIR, path)
@@ -85,7 +81,14 @@ def get_lpd_dataloader(pt_file_path=""):
         torch.save(dataset, "lp_5_clensed_tensor_dataset.pt")
     else:
         print("LOAD TENSOR DATASET: ", pt_file_path)
-        dataset = torch.load(pt_file_path)
+
+        map_location = None
+        if (
+            torch.cuda.is_available() is False
+        ):
+            map_location = torch.device("cpu")
+
+        dataset = torch.load(pt_file_path, map_location)
 
     data_loader = torch.utils.data.DataLoader(
         dataset,

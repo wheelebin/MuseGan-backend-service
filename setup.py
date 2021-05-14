@@ -9,14 +9,16 @@ setup(
     url="https://github.com/wheelebin/MuseGan-backend-service/",
     description="Restful API for MuseGAN",
     install_requires=[
-        "torch == 1.7.0+cu101",
+        "torch == 1.7.0+cpu", # +cpu=cpu_only, cu101=cuda
         "matplotlib",
         "tqdm",
         "livelossplot",
         "gdown",
+        "aiofiles",
         "mido",
         "music21",
         "fastapi",
+        "uvicorn",
         "midi2audio",
         "ipywidgets",
         "pypianoroll >= 1.0.2",

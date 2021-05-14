@@ -77,6 +77,12 @@ I need to find a way to easily:
 ## Prerequisites
 * Make sure that you have python installed
 * Make sure that you have the packages pip, virtualenv installed
+* Install Fluidsynth
+* Data
+    * Download LPD dataset if creating new tensor dataset
+    * Download .pt if loading existing tensor dataset for training model 
+    * Download checkpoints loading exisiting model
+    * Download synth files for midi2audo (Optional, this uses Fluidsynth)
 
 
 ## Installation Steps
@@ -89,3 +95,65 @@ I need to find a way to easily:
 
 # TODO
 - Make sure all outputed files are uniquely named
+- Make sure these functions work
+    - Gluing and trimming midi for a certain predetermined time in seconds, implemented the ability to use templates in the file name, so only generated midis can be glued in one of 4 ways
+    
+    - Save/download end-points for both .mid and .wav 
+
+    - ai3 & ai4 are not ai but they are "reverse playback" & "tonal inversion" (Don't know which order).
+        - Message from Upwork "This is not ai in fact, just reverse playback and tonal inversion in the MuseGAN_torch_main file these functions"
+        - But if this is only reverse playback or tonal inversion than the bellow sentance in the tech docs he sent me don't make sense
+            - "The genre field allows you to select the genre of generated music, (this option is only available when working with ai3 and ai4"
+
+    - Maybe the service which is responisble for generating a file name should be some service, which takes care of loading, saving, naming and etc safeley and can be used [DONE]
+    - Service for orchestrating the neccesary actions[DONE]
+    - Replacing notes with chords, you can set in which track or tracks to change and select a major or minor triad [DONE]
+    - Changing instruments by tracks [DONE]
+    - Convert midi to wav using various sound fonts in sf2 format. [DONE]
+
+
+# Notes
+- Each generation request is unique and delivered songs can't be modified but they can be downloaded again.
+- The genre portion of the bellow generation proccess is removed until I figure it out but here are soem notes
+    * Genre will most likley dictate which pre-trained model (Different trained models for different genre's) is used so it would need to one of the first operations
+- We will mainly focus on returning the WAV but if the user wants to save the midi as well they can request it with the file name
+- Generation proccess
+    * path, filename = getFilename()
+    * output_npz_file = predict(generator, filename)
+    * current_file = output_npx_file
+
+    * requested_operations = {
+        change_instruments: {
+            1: 0,
+            2: 0,
+            3: 27
+        },
+        add_drums: True,
+        add_chords: True,
+        set_bpm: 100,
+        modify_length: 260,
+        tone_invert: True,
+        invert_midi: True,
+    }
+
+    * available_operations = {
+        change_instruments: change_instruments,
+        add_drums: add_drums,
+        add_chords: add_chords,
+        set_bpm: set_bpm,
+        modify_length: modify_length,
+        tone_invert: tone_invert,
+        invert_midi: invert_midi,
+        }
+
+    * for operation in available_operations:
+        if operation in requested_operations:
+            operation_value = requested_operations[operation]
+            current_file = operation(operation_value)
+
+    * output_wav_file = convert_midi2_wav(current_file)
+    * return output_wav_file
+
+
+- WRITE OPERATIONS TO HAPPEN WHEN THEY NEED TO IN A LOOP SO YOU ONLY NEED TO LOOP ONCE AND SAVE ONCE
+- (Do this in your own project)
