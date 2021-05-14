@@ -1,13 +1,20 @@
 from glob import glob
+from midi_utilities import change_instruments
 
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse
+from fastapi.encoders import jsonable_encoder
+
+import jsonpickle
 
 # Custom imports
 import config
 from predictions import init_generator
 from utilities import make_project_dirs
 from music_generation_service import run_generation, get_wav_by_name
+
+from pydantic import BaseModel
+from typing import Optional
 
 
 make_project_dirs()
@@ -19,6 +26,17 @@ generator = init_generator(generator_file_path)
 # FastAPI stuff
 app = FastAPI()
 
+class ChangeInstruments(BaseModel):
+    track_1: Optional[int] = None
+    track_2: Optional[int] = None
+    track_3: Optional[int] = None
+    track_4: Optional[int] = None
+    track_5: Optional[int] = None
+
+class SongRequest(BaseModel):
+    change_instruments: Optional[ChangeInstruments] = None
+    add_chords: list = []
+
 
 @app.get("/")
 def read_root():
@@ -26,11 +44,9 @@ def read_root():
 
 
 @app.post("/songs")
-async def song(request: Request):
-    req_operations = await request.json()
-    print(req_operations)
+async def song(song_request: SongRequest):
     output_file_path = run_generation(
-        generator, req_operations
+        generator, jsonable_encoder(song_request)
 
     )  # This should take a generator which is loaded on init in here
     print(output_file_path)

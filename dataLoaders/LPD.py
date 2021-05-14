@@ -85,7 +85,7 @@ def get_lpd_dataloader(pt_file_path=""):
         map_location = None
         if (
             torch.cuda.is_available() is False
-        ):  # TODO Move the cuda.is_available() calls to the config file and have it set once on startup
+        ):
             map_location = torch.device("cpu")
 
         dataset = torch.load(pt_file_path, map_location)

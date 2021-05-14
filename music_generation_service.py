@@ -2,13 +2,14 @@ from predictions import predict
 from midi_utilities import convert_midi_to_wav, change_instruments, notes_to_chords
 from utilities import get_file_name_for_saving
 from glob import glob
-
+import jsonpickle
 import config
 
 def run_generation(generator, requested_operations):
 
     file_name, *_ = get_file_name_for_saving()
     print(file_name)
+    print(requested_operations)
 
     available_operations = {
         "change_instruments": change_instruments,
@@ -33,6 +34,8 @@ def run_generation(generator, requested_operations):
             operation = available_operations[operation_key]
 
             current_file_name = operation(current_file_name, file_name, operation_value)
+        else:
+            print("TEST", operation_key)
 
     # Set this in req
     # config.SOUNDFONTS_DIR + "/kit3.sf2"

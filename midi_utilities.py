@@ -300,9 +300,16 @@ def notes_to_chords(input_file, file_name, tracks=[1, 2, 3, 4, 5], chords="major
     return output_file_path
 
 
+
+def toggle_drums(input_file, file_name, drums_on=True):
+    if drums_on:
+        change_instruments(input_file, file_name, {"track_1": -1})
+    else:
+        change_instruments(input_file, file_name, {"track_1": 0})
+
 def change_instruments(input_file, file_name, new_instruments_by_track):
     """
-    Changes every instrument to piano, except the drums
+    Changes every instrument
     input_file - File to midi file
     output_file - File for new midi file
     new_instruments_by_track - Structure describing which track to be replaced and with what program { track_id: program_number }
@@ -313,24 +320,49 @@ def change_instruments(input_file, file_name, new_instruments_by_track):
     out = MidiFile()
     out.ticks_per_beat = mid.ticks_per_beat
 
+    print("SEE ME!")
+
+    tracks = {
+        1: "track_1",
+        2: "track_2",
+        3: "track_3",
+        4: "track_4",
+        5: "track_5"
+    }
+
     for track_i, track in enumerate(mid.tracks):
         # Loop through each track
 
+        print("track", track.name)
+
+        if track_i not in tracks:
+            print("Appending track as is and skipping: track_", track_i)
+            out.tracks.append(track)
+            continue
+
+        key = tracks[track_i]
+        if key not in new_instruments_by_track:
+            out.tracks.append(track)
+        
         new_track = MidiTrack()
+
+        if new_instruments_by_track[key] is -1:
+            print("Removing track by not appending", key)
+            continue
 
         for message in track:
             # Loop through each message in track
             # Modify with program_change message and append or just append
 
-            if message.type == "program_change" and track_i in new_instruments_by_track:
+            if message.type == "program_change":
+                print("Modifying track")
                 new_track.append(
-                    message.copy(program=new_instruments_by_track[track_i])
+                    message.copy(program=new_instruments_by_track[key])
                 )
+
             else:
                 new_track.append(message)
-
         out.tracks.append(new_track)
-
     output_file_name, output_file_path, *_ = get_file_name_for_saving(
         "mid", file_name, "CHANGE_INSTRUMENTS"
     )
