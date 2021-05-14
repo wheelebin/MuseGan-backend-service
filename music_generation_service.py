@@ -1,7 +1,9 @@
 from predictions import predict
 from midi_utilities import convert_midi_to_wav, change_instruments, notes_to_chords
 from utilities import get_file_name_for_saving
+from glob import glob
 
+import config
 
 def run_generation(generator, requested_operations):
 
@@ -37,3 +39,8 @@ def run_generation(generator, requested_operations):
     sound_font = ""
     output_file_path = convert_midi_to_wav(current_file_name, file_name, sound_font)
     return output_file_path
+
+def get_wav_by_name(file_name):
+    file_path = config.RESULTS_DIR + "/%s*.wav" % file_name
+    wav_file = glob(file_path)[0]
+    return wav_file

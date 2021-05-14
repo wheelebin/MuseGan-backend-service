@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 import config
 from predictions import init_generator
 from utilities import make_project_dirs
-from music_generation_service import run_generation
+from music_generation_service import run_generation, get_wav_by_name
 
 
 make_project_dirs()
@@ -38,4 +38,5 @@ async def song(request: Request):
 
 @app.get("/songs/{song_id}")
 def get_song(song_id):
-    print(song_id)
+    file_path = get_wav_by_name(song_id)
+    return FileResponse(file_path)
