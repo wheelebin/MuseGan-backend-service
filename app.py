@@ -25,7 +25,7 @@ def read_root():
     return "ok"
 
 
-@app.post("/song")
+@app.post("/songs")
 async def song(request: Request):
     req_operations = await request.json()
     print(req_operations)
@@ -35,3 +35,7 @@ async def song(request: Request):
     )  # This should take a generator which is loaded on init in here
     print(output_file_path)
     return FileResponse(output_file_path)
+
+@app.get("/songs/{song_id}")
+def get_song(song_id):
+    print(song_id)

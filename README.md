@@ -98,17 +98,15 @@ I need to find a way to easily:
 - Make sure these functions work
     - Gluing and trimming midi for a certain predetermined time in seconds, implemented the ability to use templates in the file name, so only generated midis can be glued in one of 4 ways
     
-    - Save & load methods for files .npz & .mid files
-    - Maybe the service which is responisble for generating a file name should be some service, which takes care of loading, saving, naming and etc safeley and can be used 
-    - Service for orchestrating the neccesary actions
-
-    - Save both .mid and .wav
+    - Save/download end-points for both .mid and .wav 
 
     - ai3 & ai4 are not ai but they are "reverse playback" & "tonal inversion" (Don't know which order).
         - Message from Upwork "This is not ai in fact, just reverse playback and tonal inversion in the MuseGAN_torch_main file these functions"
         - But if this is only reverse playback or tonal inversion than the bellow sentance in the tech docs he sent me don't make sense
             - "The genre field allows you to select the genre of generated music, (this option is only available when working with ai3 and ai4"
 
+    - Maybe the service which is responisble for generating a file name should be some service, which takes care of loading, saving, naming and etc safeley and can be used [DONE]
+    - Service for orchestrating the neccesary actions[DONE]
     - Replacing notes with chords, you can set in which track or tracks to change and select a major or minor triad [DONE]
     - Changing instruments by tracks [DONE]
     - Convert midi to wav using various sound fonts in sf2 format. [DONE]
@@ -155,3 +153,7 @@ I need to find a way to easily:
 
     * output_wav_file = convert_midi2_wav(current_file)
     * return output_wav_file
+
+
+- WRITE OPERATIONS TO HAPPEN WHEN THEY NEED TO IN A LOOP SO YOU ONLY NEED TO LOOP ONCE AND SAVE ONCE
+- (Do this in your own project)
