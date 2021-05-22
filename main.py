@@ -16,17 +16,17 @@ def main():
     generator = init_generator(generator_file_path)
 
     requested_operations = {
-        "change_instruments": {"track_1": 27, "track_2": -1, "track_3": -1, "track_4": -1, "track_5": -1},
-        "add_drums": True,
-        "add_chords": [1, 2, 3, 4, 5],
-        "set_bpm": 100,
-        "modify_length": 260,
-        "tone_invert": True,
-        "invert_midi": True,
+        #"change_instruments": {"track_1": 27, "track_2": -1, "track_3": -1, "track_4": -1, "track_5": -1},
+        #"add_drums": True,
+        #"add_chords": [1, 2, 3, 4, 5],
+        #"set_bpm": 100,
+        #"modify_length": 260,
+        #"tone_invert": True,
+        #"invert_midi": True,
     }
 
-    start_training()
-    #run_generation(generator, requested_operations)
+    #start_training()
+    run_generation(generator, requested_operations)
 
 
 if __name__ == "__main__":
