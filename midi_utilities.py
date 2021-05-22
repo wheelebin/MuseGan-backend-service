@@ -260,12 +260,7 @@ def notes_to_chords(input_file, file_name, tracks=[1, 2, 3, 4, 5], chords="major
         # Loop through tracks in MIDI file
 
         if track_n in tracks:
-            # TODO this will strip away all track
-            # Not sure about this one I think I fixed it
-            # Make sure that we only modify wanted midi track
-
             new_track = MidiTrack()
-
             for idx, msg in enumerate(original_track):
                 # Loop through each message in original track
                 # Good to know:
