@@ -4,6 +4,7 @@ from livelossplot import PlotLosses
 from livelossplot.outputs import MatplotlibPlot
 from tqdm import tqdm
 from pypianoroll import Multitrack, Track
+from pypianoroll import load as midi_load
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -99,12 +100,12 @@ def train_one_step(discriminator, generator, d_optimizer, g_optimizer, real_samp
 
     return d_loss_real + d_loss_fake, g_loss
 
-
+glob(config.ROOT_DIR + "/models/LPD/final_check_tensor*")[0]
 def start_training():
     # Prepare data
     print("Loading LPD data")
-    lpd_dataset_path = config.DATA_DIR + "/lp_5_clensed_tensor_dataset.pt"
-    data_loader = get_lpd_dataloader(lpd_dataset_path)
+    #lpd_dataset_path = config.TORCH_MODEL_PT_PATH + "/lp_5_clensed_tensor_dataset.pt"
+    data_loader = get_lpd_dataloader(config.TORCH_MODEL_PT_PATH)
 
     ### Preparing to train the network
     # Create neural networks
@@ -228,6 +229,18 @@ def start_training():
                     tempo=config.tempo_array,
                     resolution=config.beat_resolution,
                 )
+                # Save checkpoint state_dict
+                torch.save(
+                    generator.state_dict(),
+                    config.CHECKPOINT_PATH + "/tensor_checkpoint_step_" + str(step)  + '.pt',
+                )
+                 # Write sample as midi
+                sample_file_name = config.RESULTS_DIR + '/sample_step_' + str(step)
+                m.save(sample_file_name + '.npz')
+
+                m1 = midi_load(sample_file_name + '.npz')
+                m1.write(sample_file_name + '.mid')
+
                 axs = m.plot()
                 plt.gcf().set_size_inches((16, 8))
                 for ax in axs:
@@ -250,6 +263,6 @@ def start_training():
     print("Attempting to post training save")
     torch.save(
         generator.state_dict(),
-        config.CHECKPOINT_PATH + "/final_check_" + str(d_loss),
+        config.CHECKPOINT_PATH + "/tensor_final_checkpoint.pt"
     )
     print("Post training save susccesful!")

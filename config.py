@@ -6,6 +6,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 CHECKPOINT_PATH = ROOT_DIR + "/models/LPD"
+TORCH_MODEL_PT_PATH = CHECKPOINT_PATH + '/tensor_final_checkpoint.pt'
 MIDI_DIR = ROOT_DIR + "/midi_train/Classical/Bach"
 NPZ_DIR = ROOT_DIR + "/npz_train/Bach"
 DATASET_ROOT_PATH = ROOT_DIR + "/data/lpd_5/lpd_5_cleansed"
