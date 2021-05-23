@@ -6,7 +6,6 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 CHECKPOINT_PATH = ROOT_DIR + "/models/LPD"
-TORCH_MODEL_PT_PATH = CHECKPOINT_PATH + '/tensor_final_checkpoint.pt'
 MIDI_DIR = ROOT_DIR + "/midi_train/Classical/Bach"
 NPZ_DIR = ROOT_DIR + "/npz_train/Bach"
 DATASET_ROOT_PATH = ROOT_DIR + "/data/lpd_5/lpd_5_cleansed"
@@ -15,6 +14,7 @@ DATA_DIR = ROOT_DIR + "/data"
 SOUNDFONTS_DIR = DATA_DIR + "/soundfonts"
 RESULTS_DIR = DATA_DIR + "/results"
 AMG_DIR = DATA_DIR + "/amg"
+TENSOR_DATASET_PATH = DATA_DIR + '/lp_5_clensed_tensor_dataset.pt'
 
 # Data
 n_tracks = 5  # number of tracks

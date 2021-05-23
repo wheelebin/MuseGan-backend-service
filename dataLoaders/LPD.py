@@ -67,7 +67,7 @@ def get_lpd_dataloader(pt_file_path=""):
                     continue
                 data.append(pianoroll[:, start:end])
 
-        print(data)
+        #print(data)
 
         # Stack all the collected pianoroll segments into one big array
         random.shuffle(data)
@@ -78,7 +78,7 @@ def get_lpd_dataloader(pt_file_path=""):
         ## We create a dataset and a data loader to the network
         data = torch.as_tensor(data, dtype=torch.float32)
         dataset = torch.utils.data.TensorDataset(data)
-        torch.save(dataset, "lp_5_clensed_tensor_dataset.pt")
+        torch.save(dataset, config.TENSOR_DATASET_PATH)
     else:
         print("LOAD TENSOR DATASET: ", pt_file_path)
 
