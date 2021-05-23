@@ -11,13 +11,14 @@ from training import start_training
 
 def main():
     make_project_dirs()
-    
+
     while True:
         print('What program do you want to run?')
         program = input('["train" or "t" / "predict" or "p"] ')
 
         if program == 'train' or program == 't':
             start_training()
+            print("Finished training")
             break
         
         elif program == 'predict' or program == 'p':

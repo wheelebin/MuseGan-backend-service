@@ -181,7 +181,6 @@ def start_training():
             if d_loss < d_loss_min:
                 torch.save(
                     generator.state_dict(),
-                    # config.CHECKPOINT_PATH + str(step) + "_check_" + str(d_loss),
                     "%s/%s_check_%s" % (config.CHECKPOINT_PATH, str(step), str(d_loss))
                 )
                 d_loss_min = d_loss
@@ -244,11 +243,6 @@ def start_training():
                     tempo=config.tempo_array,
                     resolution=config.beat_resolution,
                 )
-                # Save checkpoint state_dict
-                torch.save(
-                    generator.state_dict(),
-                    config.CHECKPOINT_PATH + "/tensor_checkpoint_step_" + str(step)  + '.pt',
-                )
                  # Write sample as midi
                 sample_file_name = config.RESULTS_DIR + '/sample_step_' + str(step)
                 m.save(sample_file_name + '.npz')
@@ -278,6 +272,6 @@ def start_training():
     print("Attempting to post training save")
     torch.save(
         generator.state_dict(),
-        config.CHECKPOINT_PATH + "/tensor_final_checkpoint.pt"
+        config.CHECKPOINT_PATH + "/tensor_final_checkpoint"
     )
     print("Post training save susccesful!")
