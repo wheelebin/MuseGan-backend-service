@@ -8,17 +8,8 @@ import config
 def run_generation(generator, requested_operations):
 
     file_name, *_ = get_file_name_for_saving()
-    print(file_name)
-    print(requested_operations)
 
     available_operations = {
-        "change_instruments": change_instruments,
-        # "add_drums": add_drums,
-        "add_chords": notes_to_chords,
-        # "set_bpm": set_bpm,
-        # "modify_length": modify_length,
-        # "tone_invert": tone_invert,
-        # "invert_midi": invert_midi,
     }
 
     # Turn this into its own service file, called music generator or something
@@ -37,8 +28,6 @@ def run_generation(generator, requested_operations):
         else:
             print("TEST", operation_key)
 
-    # Set this in req
-    # config.SOUNDFONTS_DIR + "/kit3.sf2"
     sound_font = ""
     output_file_path = convert_midi_to_wav(current_file_name, file_name, sound_font)
     return output_file_path
