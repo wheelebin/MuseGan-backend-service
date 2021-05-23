@@ -14,6 +14,7 @@ DATA_DIR = ROOT_DIR + "/data"
 SOUNDFONTS_DIR = DATA_DIR + "/soundfonts"
 RESULTS_DIR = DATA_DIR + "/results"
 AMG_DIR = DATA_DIR + "/amg"
+TENSOR_DATASET_PATH = DATA_DIR + '/lp_5_clensed_tensor_dataset.pt'
 
 # Data
 n_tracks = 5  # number of tracks
