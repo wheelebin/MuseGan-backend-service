@@ -4,6 +4,7 @@ from livelossplot import PlotLosses
 from livelossplot.outputs import MatplotlibPlot
 from tqdm import tqdm
 from pypianoroll import Multitrack, Track
+from pypianoroll import load as midi_load
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -23,13 +24,24 @@ def compute_gradient_penalty(discriminator, real_samples, fake_samples):
     discriminator provides to the generator, and thus help stablize the training
     of the generator."""
     # Get random interpolations between real and fake samples
-    alpha = torch.rand(real_samples.size(0), 1, 1, 1).cuda()
+    alpha = None
+    if torch.cuda.is_available():
+        alpha = torch.rand(real_samples.size(0), 1, 1, 1).cuda()
+    else:
+        alpha = torch.rand(real_samples.size(0), 1, 1, 1)
+
     interpolates = alpha * real_samples + ((1 - alpha) * fake_samples)
     interpolates = interpolates.requires_grad_(True)
     # Get the discriminator output for the interpolations
     d_interpolates = discriminator(interpolates)
     # Get gradients w.r.t. the interpolations
-    fake = torch.ones(real_samples.size(0), 1).cuda()
+
+    fake = None
+    if torch.cuda.is_available():
+        fake = torch.ones(real_samples.size(0), 1).cuda()
+    else:
+        fake = torch.ones(real_samples.size(0), 1)
+
     gradients = torch.autograd.grad(
         outputs=d_interpolates,
         inputs=interpolates,
@@ -99,12 +111,16 @@ def train_one_step(discriminator, generator, d_optimizer, g_optimizer, real_samp
 
     return d_loss_real + d_loss_fake, g_loss
 
-
 def start_training():
     # Prepare data
     print("Loading LPD data")
-    lpd_dataset_path = config.DATA_DIR + "/lp_5_clensed_tensor_dataset.pt"
-    data_loader = get_lpd_dataloader(lpd_dataset_path)
+    #lpd_dataset_path = config.TORCH_MODEL_PT_PATH + "/lp_5_clensed_tensor_dataset.pt"
+
+    data_loader = None
+    try:
+        data_loader = get_lpd_dataloader(config.TENSOR_DATASET_PATH)
+    except :
+        data_loader = get_lpd_dataloader()
 
     ### Preparing to train the network
     # Create neural networks
@@ -165,7 +181,6 @@ def start_training():
             if d_loss < d_loss_min:
                 torch.save(
                     generator.state_dict(),
-                    # config.CHECKPOINT_PATH + str(step) + "_check_" + str(d_loss),
                     "%s/%s_check_%s" % (config.CHECKPOINT_PATH, str(step), str(d_loss))
                 )
                 d_loss_min = d_loss
@@ -228,6 +243,13 @@ def start_training():
                     tempo=config.tempo_array,
                     resolution=config.beat_resolution,
                 )
+                 # Write sample as midi
+                sample_file_name = config.RESULTS_DIR + '/sample_step_' + str(step)
+                m.save(sample_file_name + '.npz')
+
+                m1 = midi_load(sample_file_name + '.npz')
+                m1.write(sample_file_name + '.mid')
+
                 axs = m.plot()
                 plt.gcf().set_size_inches((16, 8))
                 for ax in axs:
@@ -250,6 +272,6 @@ def start_training():
     print("Attempting to post training save")
     torch.save(
         generator.state_dict(),
-        config.CHECKPOINT_PATH + "/final_check_" + str(d_loss),
+        config.CHECKPOINT_PATH + "/tensor_final_checkpoint"
     )
     print("Post training save susccesful!")

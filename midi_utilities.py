@@ -108,7 +108,7 @@ def join_midi_to_length(input_folder, output_file, length):
                 if msg.type in [
                     "note_on",
                     "note_off",
-                ]:  # TODO check and see if this is the way to implement notes_to_chords
+                ]:
                     tracks_length[track_n] += tick2second(
                         msg.time, input_midi.ticks_per_beat, tempo
                     )
@@ -260,7 +260,8 @@ def notes_to_chords(input_file, file_name, tracks=[1, 2, 3, 4, 5], chords="major
         # Loop through tracks in MIDI file
 
         if track_n in tracks:
-            # TODO this will strip away all trakc
+            # TODO this will strip away all track
+            # Not sure about this one I think I fixed it
             # Make sure that we only modify wanted midi track
 
             new_track = MidiTrack()
