@@ -29,16 +29,11 @@ def get_lpd_dataloader(pt_file_path=""):
                     id_list.extend([line.rstrip() for line in f])
         id_list = list(set(id_list))
 
-        n = 0
-
+       
         ## Loading data into variables
         data = []
         # Iterate over all the songs in the ID list
         for msd_id in tqdm(id_list):
-            if n > 100:
-                break
-            n = n + 1
-            print(n)
             # Load the multitrack as a pypianoroll.Multitrack instance
             song_dir = dataset_root / msd_id_to_dirs(msd_id)
             multitrack = pypianoroll.load(song_dir / os.listdir(song_dir)[0])

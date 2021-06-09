@@ -20,7 +20,7 @@ from typing import Optional
 make_project_dirs()
 
 # Generator stuff
-generator_file_path = glob(config.ROOT_DIR + "/models/LPD/final_check_tensor*")[0]
+generator_file_path = glob(config.ROOT_DIR + "/models/LPD/*_tensor*")[0]
 generator = init_generator(generator_file_path)
 
 # FastAPI stuff
