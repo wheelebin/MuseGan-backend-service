@@ -24,16 +24,16 @@ def main():
         elif program == 'predict' or program == 'p':
 
             requested_operations = {
-                #"change_instruments": {"track_1": 27, "track_2": -1, "track_3": -1, "track_4": -1, "track_5": -1},
-                #"add_drums": True,
-                #"add_chords": [1, 2, 3, 4, 5],
-                #"set_bpm": 100,
-                #"modify_length": 260,
-                #"tone_invert": True,
-                #"invert_midi": True,
+                "change_instruments": {"track_1": 27, "track_2": -1, "track_3": -1, "track_4": -1, "track_5": -1},
+                "add_drums": True,
+                "add_chords": [1, 2, 3, 4, 5],
+                "set_bpm": 100,
+                "modify_length": 260,
+                "tone_invert": True,
+                "invert_midi": True,
             }
 
-            generator_file_path = glob(config.CHECKPOINT_PATH + "/tensor_final_*")[0]
+            generator_file_path = glob(config.CHECKPOINT_PATH + "/tensor_*")[0]
             generator = init_generator(generator_file_path)
             run_generation(generator, requested_operations)
             break
