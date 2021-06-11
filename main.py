@@ -12,6 +12,8 @@ from training import start_training
 def main():
     make_project_dirs()
 
+    print("Cuda is available: ", torch.cuda.is_available())
+
     while True:
         print('What program do you want to run?')
         program = input('["train" or "t" / "predict" or "p"] ')
