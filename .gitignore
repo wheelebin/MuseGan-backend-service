@@ -146,3 +146,15 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+
+
+
+# musegan
+# Experiments
+utils/musegan/.backup/
+utils/musegan/.recycle/
+utils/musegan/logs/
+utils/musegan/data/
+utils/musegan/exp/
+utils/musegan/export_dir/
