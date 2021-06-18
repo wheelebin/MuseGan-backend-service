@@ -4,10 +4,10 @@ import logging
 import imageio
 import numpy as np
 import tensorflow as tf
-from musegan.io_utils import pianoroll_to_image, vector_to_image
-from musegan.io_utils import image_grid, save_pianoroll
-from musegan.losses import get_adv_losses
-from musegan.utils import load_component, make_sure_path_exists
+from .io_utils import pianoroll_to_image, vector_to_image
+from .io_utils import image_grid, save_pianoroll
+from .losses import get_adv_losses
+from .utils import load_component, make_sure_path_exists
 
 LOGGER = logging.getLogger(__name__)
 
@@ -422,5 +422,5 @@ class Model:
                         os.path.join(config["result_dir"], "pianorolls", key)
                     )
 
-                nodes["save_pianorolls_op"] = funccy #save_pianoroll_ops
+                nodes["save_pianorolls_op"] = funccy  # save_pianoroll_ops
         return nodes

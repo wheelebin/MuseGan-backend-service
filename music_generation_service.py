@@ -1,11 +1,38 @@
-from predictions import predict
+from predictions import GenOne, GenTwo
 from midi_utilities import convert_midi_to_wav, change_instruments, notes_to_chords
 from utilities import get_file_name_for_saving
 from glob import glob
 import jsonpickle
 import config
 
+
+class MusicGenKing:
+    def __init__(self, generator_file_path):
+        self.genOne = GenOne(generator_file_path)
+        self.genTwo = GenTwo()
+
+    def predict(self, gen_type=None):
+
+        file_name, *_ = get_file_name_for_saving()
+
+        if gen_type is "ai1":
+            file_name, output_midi_filename, *_ = self.genOne.predict(file_name)
+        elif gen_type is "ai2":
+            file_name, output_midi_filename, *_ = self.genOne.predict(file_name)
+        else:
+            return
+
+
+def predict():
+    return 1
+
+
 def run_generation(generator, requested_operations):
+
+    a = MusicGenKing()
+    a.predict("ai2")
+
+    return
 
     file_name, *_ = get_file_name_for_saving()
     print(file_name)
@@ -42,6 +69,7 @@ def run_generation(generator, requested_operations):
     sound_font = ""
     output_file_path = convert_midi_to_wav(current_file_name, file_name, sound_font)
     return output_file_path
+
 
 def get_wav_by_name(file_name):
     file_path = config.RESULTS_DIR + "/%s*.wav" % file_name

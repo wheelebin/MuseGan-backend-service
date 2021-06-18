@@ -5,7 +5,7 @@ import shutil
 import logging
 import importlib
 import yaml
-from musegan.config import FILE_LOGLEVEL, FILE_LOG_FORMAT
+from .config import FILE_LOGLEVEL, FILE_LOG_FORMAT
 
 # --- Path utilities -----------------------------------------------------------
 def make_sure_path_exists(path):
@@ -70,7 +70,9 @@ def load_params(params_file_path):
 
 def load_component(component, name, class_name):
     """Load and return component network from file."""
-    imported = importlib.import_module(".".join(("musegan.presets", component, name)))
+    imported = importlib.import_module(
+        ".".join((".presets", component, name)), package=__package__
+    )
     return getattr(imported, class_name)
 
 

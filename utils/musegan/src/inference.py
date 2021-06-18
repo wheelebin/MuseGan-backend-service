@@ -4,14 +4,18 @@ import time
 import logging
 import argparse
 from pprint import pformat
+
+# from utils.musegan.src import musegan
 import numpy as np
 import scipy.stats
 import tensorflow as tf
-from musegan.config import LOGLEVEL, LOG_FORMAT
-from musegan.data import load_data, get_samples
-from musegan.model import Model
-from musegan.utils import make_sure_path_exists, load_yaml, update_not_none
-from musegan.io_utils import save_pianoroll
+from .musegan.config import LOGLEVEL, LOG_FORMAT
+from .musegan.data import load_data, get_samples
+from .musegan.model import Model
+from .musegan.utils import make_sure_path_exists, load_yaml, update_not_none
+from .musegan.io_utils import save_pianoroll
+
+from config import ROOT_DIR
 
 LOGGER = logging.getLogger("musegan.inference")
 
@@ -66,13 +70,13 @@ def parse_arguments():
 def get_config_params():
     # This is just lazy
     args = {
-        "checkpoint_dir": "./exp/default/model",
+        "checkpoint_dir": ROOT_DIR + "/utils/musegan/exp/default/model",
         "columns": 5,
-        "config": "./exp/default/config.yaml",
+        "config": ROOT_DIR + "/utils/musegan/exp/default/config.yaml",
         "gpu": "1",
         "lower": -2,
-        "params": "./exp/default/params.yaml",
-        "result_dir": "./exp/default/results/inference",
+        "params": ROOT_DIR + "/utils/musegan/exp/default/params.yaml",
+        "result_dir": ROOT_DIR + "/utils/musegan/exp/default/results/inference",
         "rows": 5,
         "runs": 1,
         "upper": 2,
@@ -206,6 +210,8 @@ class Inference:
             data,
         ) = setup()
 
+        self.config = config
+        self.params = params
         self.sampler_op = sampler_op
 
         # ========================== Session Preparation ===========================
@@ -252,6 +258,17 @@ class Inference:
         result = self.sess.run(self.sampler_op, feed_dict=self.feed_dict_sampler)
         array = result > 0
         return array
+
+    def save_pianoroll(self, array, name):
+        save_pianoroll(
+            name,
+            array,
+            self.config["midi"]["programs"],
+            list(map(bool, self.config["midi"]["is_drums"])),
+            self.config["midi"]["tempo"],
+            self.params["beat_resolution"],
+            self.config["midi"]["lowest_pitch"],
+        )
 
 
 def run_prediction(

@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name="MuseGAN - Restful API",
+    name="museganKing",
     version="1.0.0",
     author="Joakim Allen",
     author_email="jln.allen95@gmail.com",
@@ -10,7 +10,7 @@ setup(
     description="Restful API for MuseGAN",
     install_requires=[
         # pip install [ torch==1.7.0+cu101 / torch==1.7.0+cpu ] -f https://download.pytorch.org/whl/torch_stable.html
-        "torch == 1.7.0+cpu", # +cpu=cpu_only, cu101=cuda
+        "torch == 1.7.0+cpu",  # +cpu=cpu_only, cu101=cuda
         "matplotlib",
         "tqdm",
         "livelossplot",
