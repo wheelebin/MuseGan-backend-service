@@ -13,10 +13,8 @@ import config
 ## Loading data into variables
 data = []
 for song in tqdm(glob(config.NPZ_DIR + "/*.npz")):
-    # print(song)
     # Load the multitrack as a pypianoroll.Multitrack instance
     multitrack = pypianoroll.load(song)
-    # print(multitrack)
     # Binarize the pianorolls
     multitrack.binarize()
     # Downsample the pianorolls (shape: n_timesteps x config.n_pitches)
@@ -25,16 +23,19 @@ for song in tqdm(glob(config.NPZ_DIR + "/*.npz")):
     try:
         pianoroll = multitrack.stack() > 0
     except ValueError:
-        # print("No tracks there")
         continue
     # Get the target pitch range only
-    pianoroll = pianoroll[:, :, config.lowest_pitch : config.lowest_pitch + config.n_pitches]
+    pianoroll = pianoroll[
+        :, :, config.lowest_pitch : config.lowest_pitch + config.n_pitches
+    ]
     if pianoroll.shape[0] != 5:
         continue
     # Calculate the total measures
     n_total_measures = multitrack.get_max_length() // config.measure_resolution
     candidate = n_total_measures - config.n_measures
-    target_n_samples = min(n_total_measures // config.n_measures, config.n_samples_per_song)
+    target_n_samples = min(
+        n_total_measures // config.n_measures, config.n_samples_per_song
+    )
     # Randomly select a number of phrases from the multitrack pianoroll
     try:
         for idx in np.random.choice(candidate, target_n_samples, False):

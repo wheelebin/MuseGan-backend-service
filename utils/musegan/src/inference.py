@@ -268,6 +268,7 @@ class Inference:
             self.config["midi"]["tempo"],
             self.params["beat_resolution"],
             self.config["midi"]["lowest_pitch"],
+            self.config["midi"]["track_names"],
         )
 
 

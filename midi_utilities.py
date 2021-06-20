@@ -321,8 +321,6 @@ def change_instruments(input_file, file_name, new_instruments_by_track):
     out = MidiFile()
     out.ticks_per_beat = mid.ticks_per_beat
 
-    print("SEE ME!")
-
     tracks = {
         1: "track_1",
         2: "track_2",

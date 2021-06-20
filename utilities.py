@@ -41,12 +41,10 @@ def make_project_dirs():
 
 def convert_to_npz(input_folder, output_folder):
     for idx, song in enumerate(tqdm(Path(input_folder).glob("**/*.mid"))):
-        # print(song)
         try:
             m = midi_read(song)
         except BaseException:
             continue
-        # print(m)
         m.save(output_folder + f"/{idx:06}.npz")
 
 

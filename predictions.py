@@ -1,8 +1,14 @@
 import numpy as np
 import torch
-from pypianoroll import Multitrack, Track
-from pypianoroll import Multitrack
-from pypianoroll import load as midi_load
+
+# from pypianoroll import Multitrack, Track
+# from pypianoroll import Multitrack
+# from pypianoroll import load as midi_load
+
+from utils.musegan.src.musegan.packages.pypianoroll import Multitrack, Track
+from utils.musegan.src.musegan.packages.pypianoroll import load as midi_load
+
+
 import uuid
 from glob import glob
 from utils.musegan.src.inference import Inference
@@ -92,6 +98,7 @@ class GenTwo:
         file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
 
         print("GEN TWO OUTPUT")
+        print(result)
         print(output_npz_filename)
         print(output_midi_filename)
 
