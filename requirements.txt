@@ -1,0 +1,7 @@
+ipywidgets = "*"
+torch = "*"
+matplotlib = "*"
+tqdm = "*"
+livelossplot = "*"
+gdown = "*"
+pypianoroll = ">=1.0.2"
