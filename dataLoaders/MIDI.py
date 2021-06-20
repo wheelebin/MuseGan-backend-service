@@ -8,9 +8,11 @@ import torch
 import pypianoroll
 from tqdm import tqdm
 
+import config
+
 ## Loading data into variables
 data = []
-for song in tqdm(glob(config.NPZ_DIR + "*.npz")):
+for song in tqdm(glob(config.NPZ_DIR + "/*.npz")):
     # print(song)
     # Load the multitrack as a pypianoroll.Multitrack instance
     multitrack = pypianoroll.load(song)
@@ -54,5 +56,5 @@ print(f"Data shape : {data.shape}")
 data = torch.as_tensor(data, dtype=torch.float32)
 dataset = torch.utils.data.TensorDataset(data)
 data_loader = torch.utils.data.DataLoader(
-    dataset, config.batch_size=config.batch_size, drop_last=True, shuffle=True
+    dataset, batch_size=config.batch_size, drop_last=True, shuffle=True
 )
