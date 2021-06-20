@@ -11,16 +11,64 @@ class MusicGenKing:
         self.genOne = GenOne(generator_file_path)
         self.genTwo = GenTwo()
 
+    def run_generation(self, gen_type, requested_operations):
+
+        file_name, output_midi_filename = self.predict(gen_type)
+
+        current_file_name = self.run_midi_mutation_ops(
+            file_name, output_midi_filename, requested_operations
+        )
+        output_file_path = self.convert_midi_to_wav(current_file_name, file_name)
+
+        return file_name, output_file_path
+
     def predict(self, gen_type=None):
 
         file_name, *_ = get_file_name_for_saving()
 
-        if gen_type is "ai1":
+        if gen_type == "ai1":
             file_name, output_midi_filename, *_ = self.genOne.predict(file_name)
-        elif gen_type is "ai2":
-            file_name, output_midi_filename, *_ = self.genOne.predict(file_name)
+        elif gen_type == "ai2":
+            file_name, output_midi_filename, *_ = self.genTwo.predict(file_name)
         else:
-            return
+            return None
+
+        return (file_name, output_midi_filename)
+
+    def run_midi_mutation_ops(
+        self, file_name, output_midi_filename, requested_operations
+    ):
+
+        available_operations = {
+            "change_instruments": change_instruments,
+            # "add_drums": add_drums,
+            "add_chords": notes_to_chords,
+            # "set_bpm": set_bpm,
+            # "modify_length": modify_length,
+            # "tone_invert": tone_invert,
+            # "invert_midi": invert_midi,
+        }
+
+        current_file_name = output_midi_filename
+
+        for operation_key in available_operations:
+            if operation_key in requested_operations:
+
+                operation_value = requested_operations[operation_key]
+                operation = available_operations[operation_key]
+
+                current_file_name = operation(
+                    current_file_name, file_name, operation_value
+                )
+
+        return current_file_name
+
+    def convert_midi_to_wav(self, current_file_name, file_name):
+        # Set this in req
+        # config.SOUNDFONTS_DIR + "/kit3.sf2"
+        sound_font = ""
+        output_file_path = convert_midi_to_wav(current_file_name, file_name, sound_font)
+        return output_file_path
 
 
 def predict():
@@ -30,44 +78,14 @@ def predict():
 def run_generation(generator, requested_operations):
 
     a = MusicGenKing()
-    a.predict("ai2")
 
-    return
-
-    file_name, *_ = get_file_name_for_saving()
-    print(file_name)
     print(requested_operations)
 
-    available_operations = {
-        "change_instruments": change_instruments,
-        # "add_drums": add_drums,
-        "add_chords": notes_to_chords,
-        # "set_bpm": set_bpm,
-        # "modify_length": modify_length,
-        # "tone_invert": tone_invert,
-        # "invert_midi": invert_midi,
-    }
+    file_name, output_midi_filename, *_ = a.predict("ai2")
 
-    # Turn this into its own service file, called music generator or something
-    file_name, output_midi_filename, *_ = predict(generator, file_name)
-    print(file_name, output_midi_filename)
+    current_file_name = a.run_midi_mutation_ops(file_name, output_midi_filename)
+    output_file_path = a.convert_midi_to_wav(current_file_name, file_name)
 
-    current_file_name = output_midi_filename
-
-    for operation_key in available_operations:
-        if operation_key in requested_operations:
-
-            operation_value = requested_operations[operation_key]
-            operation = available_operations[operation_key]
-
-            current_file_name = operation(current_file_name, file_name, operation_value)
-        else:
-            print("TEST", operation_key)
-
-    # Set this in req
-    # config.SOUNDFONTS_DIR + "/kit3.sf2"
-    sound_font = ""
-    output_file_path = convert_midi_to_wav(current_file_name, file_name, sound_font)
     return output_file_path
 
 

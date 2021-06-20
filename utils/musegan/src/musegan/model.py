@@ -232,8 +232,6 @@ class Model:
         LOGGER.info("Building prediction nodes.")
         with tf.variable_scope(self.name, reuse=tf.AUTO_REUSE):
 
-            print("GET PREDICT NODES")
-
             nodes = {"z": z}
 
             # Get slope tensor (for straight-through estimators)
@@ -386,15 +384,15 @@ class Model:
                     elif "bernoulli_sampling" in name:
                         rand_num = np.random.uniform(size=array.shape)
                         array_ = 0.5 * (array + 1.0) > rand_num
-                    save_pianoroll(
-                        filepath,
-                        array_,
-                        config["midi"]["programs"],
-                        list(map(bool, config["midi"]["is_drums"])),
-                        config["midi"]["tempo"],
-                        params["beat_resolution"],
-                        config["midi"]["lowest_pitch"],
-                    )
+                    # save_pianoroll(
+                    #    filepath,
+                    #    array_,
+                    #    config["midi"]["programs"],
+                    #    list(map(bool, config["midi"]["is_drums"])),
+                    #    config["midi"]["tempo"],
+                    #    params["beat_resolution"],
+                    #    config["midi"]["lowest_pitch"],
+                    # )
 
                     return array  # np.array([0], np.int32)
 

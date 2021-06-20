@@ -29,7 +29,6 @@ def get_lpd_dataloader(pt_file_path=""):
                     id_list.extend([line.rstrip() for line in f])
         id_list = list(set(id_list))
 
-       
         ## Loading data into variables
         data = []
         # Iterate over all the songs in the ID list
@@ -62,8 +61,6 @@ def get_lpd_dataloader(pt_file_path=""):
                     continue
                 data.append(pianoroll[:, start:end])
 
-        #print(data)
-
         # Stack all the collected pianoroll segments into one big array
         random.shuffle(data)
         data = np.stack(data)
@@ -78,9 +75,7 @@ def get_lpd_dataloader(pt_file_path=""):
         print("LOAD TENSOR DATASET: ", pt_file_path)
 
         map_location = None
-        if (
-            torch.cuda.is_available() is False
-        ):
+        if torch.cuda.is_available() is False:
             map_location = torch.device("cpu")
 
         dataset = torch.load(pt_file_path, map_location)
