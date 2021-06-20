@@ -259,13 +259,18 @@ class Inference:
         array = result > 0
         return array
 
-    def save_pianoroll(self, array, name):
+    def save_pianoroll(self, array, name, _tempo=None):
+        tempo = self.config["midi"]["tempo"]
+        
+        if _tempo is not None:
+            tempo = _tempo
+
         save_pianoroll(
             name,
             array,
             self.config["midi"]["programs"],
             list(map(bool, self.config["midi"]["is_drums"])),
-            self.config["midi"]["tempo"],
+            tempo,
             self.params["beat_resolution"],
             self.config["midi"]["lowest_pitch"],
             self.config["midi"]["track_names"],

@@ -354,6 +354,7 @@ def save_pianoroll(
     #    )
     print(tracks)
 
+    # TODO: DO THIS SOMEWHER EELSE OR GET VALUES FROM CONFIG
     beat_resolution = 4
     measure_resolution = 4 * beat_resolution
     tempo_array = np.full((4 * 4 * measure_resolution, 1), tempo)

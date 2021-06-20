@@ -142,25 +142,6 @@ def choose_tracks(input_file, output_file, tracklist):
     output_midi.save(output_file)
 
 
-def check_tones(input_file):
-    """
-    Exmaple: min_note, max_note = check_tones("/content/Ievan_Polkka.mid")
-    Returns tuple with maximum and minumum note number
-    """
-    try:
-        mid = MidiFile(input_file)
-    except:
-        return None
-    min_note = 128
-    max_note = 0
-    for track in mid.tracks:
-        for message in track:
-            if "note" in dir(message):
-                if message.note < min_note:
-                    min_note = message.note
-                if message.note > max_note:
-                    max_note = message.note
-    return (min_note, max_note)
 
 
 def open_midi(midi_path, remove_drums=False):
@@ -302,11 +283,12 @@ def notes_to_chords(input_file, file_name, tracks=[1, 2, 3, 4, 5], chords="major
 
 
 
-def toggle_drums(input_file, file_name, drums_on=True):
+def set_drums(input_file, file_name, drums_on=True):
     if drums_on:
-        change_instruments(input_file, file_name, {"track_1": -1})
+        return change_instruments(input_file, file_name, {"track_1": 0})
     else:
-        change_instruments(input_file, file_name, {"track_1": 0})
+        return change_instruments(input_file, file_name, {"track_1": -1})
+
 
 def change_instruments(input_file, file_name, new_instruments_by_track):
     """
@@ -334,18 +316,23 @@ def change_instruments(input_file, file_name, new_instruments_by_track):
 
         print("track", track.name)
 
+        # Append index 0 in tracks, it's meta info
         if track_i not in tracks:
             print("Appending track as is and skipping: track_", track_i)
             out.tracks.append(track)
             continue
 
         key = tracks[track_i]
+
+        # Append track as is if not in new_instruments_by_track arr
         if key not in new_instruments_by_track:
             out.tracks.append(track)
+            continue
         
         new_track = MidiTrack()
 
-        if new_instruments_by_track[key] is -1:
+        # Don't append track if -1, will pretty much "delete" the track
+        if new_instruments_by_track[key] == -1:
             print("Removing track by not appending", key)
             continue
 
@@ -383,22 +370,48 @@ def convert_midi_to_wav(input_file, file_name, soundfont=""):
     fs.midi_to_audio(input_file, output_file_path)
     return output_file_path
 
+def tonal_inversion(input_file, file_name, tonal_inversion=True):
+    if tonal_inversion == False:
+        return input_file
+    
+    min_note, max_note = check_tones(input_file)
+    return tone_invert(input_file, file_name, (max_note + min_note)/2)
+
+def check_tones(input_file):
+    """
+    Exmaple: min_note, max_note = check_tones("/content/Ievan_Polkka.mid")
+    Returns tuple with maximum and minumum note number
+    """
+    try:
+        mid = MidiFile(input_file)
+    except:
+        return None
+    min_note = 128
+    max_note = 0
+    for track in mid.tracks:
+        for message in track:
+            if "note" in dir(message):
+                if message.note < min_note:
+                    min_note = message.note
+                if message.note > max_note:
+                    max_note = message.note
+    return (min_note, max_note)
+
 
 # These will be used but I've not checked them if they work yet
-def tone_invert(input_file, output_file, basenote=50):
+def tone_invert(input_file, file_name, basenote=50):
     """
     Example: tone_invert("/content/Ievan_Polkka.mid", "inverted.mid", (max_note + min_note)/2)
     Inverts tones over basenote and saves to output_file.
     Optimal basenote is (max_note + min_note)/2
     """
     # TODO This is ai4 / "tonal inversion"
-    try:
-        mid = MidiFile(input_file)
-    except:
-        return None
+    mid = MidiFile(input_file)
     inverted = MidiFile()
 
     for track in mid.tracks:
+
+
         new_track = MidiTrack()
         if "drum" in track.name.lower():
             new_track = track
@@ -410,31 +423,33 @@ def tone_invert(input_file, output_file, basenote=50):
                     if "note" in dir(message):
                         inverted_note = basenote - (message.note - basenote)
                         new_track.append(
-                            message.copy(note=inverted_note, time=int(message.time))
+                            message.copy(note=int(inverted_note), time=int(message.time))
                         )
                     else:
                         new_track.append(message)
 
         inverted.tracks.append(new_track)
-    try:
-        inverted.save(output_file)
-    except:
-        pass
 
+    output_file_name, output_file_path, *_ = get_file_name_for_saving(
+        "mid", file_name, "TONE_INVERT"
+    )
+    inverted.save(output_file_path)
 
-def invert_midi(input_file, output_file):
+    return output_file_path
+
+def invert_midi(input_file, file_name, invert_midi=True):
     """
     Example: invert_midi("/content/scooter-let_me_be_your_valentine.mid", "inverted.mid")
     Takes input_file, inverts its playback and saves to output_file
     """
+
+    if invert_midi == False:
+        return input_file
+
     # TODO This is ai3 / reverse playback
     output_midi = MidiFile()
-    tempo = 600000
     new_tracks = []
-    try:
-        input_midi = MidiFile(input_file)
-    except:
-        return None
+    input_midi = MidiFile(input_file)
     # Copying the time metrics between both files
 
     output_midi.ticks_per_beat = input_midi.ticks_per_beat
@@ -451,7 +466,10 @@ def invert_midi(input_file, output_file):
     for track in new_tracks:
         output_midi.tracks.append(track[::-1])
 
-    try:
-        output_midi.save(output_file)
-    except:
-        pass
+    output_file_name, output_file_path, *_ = get_file_name_for_saving(
+        "mid", file_name, "INVERT_MIDI"
+    )
+
+    output_midi.save(output_file_path)
+
+    return output_file_path

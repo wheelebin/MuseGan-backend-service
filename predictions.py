@@ -37,7 +37,7 @@ class GenOne:
         self.generator.load_state_dict(torch.load(generator_file_path, map_location))
         self.generator.eval()  # NOTE: I might consider moving this and forcing you to evail the model yourself
 
-    def predict(self, file_name):
+    def predict(self, file_name, _tempo=None):
         file_name, output_npz_filename, *_ = get_file_name_for_saving("npz", file_name)
         file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
 
@@ -69,8 +69,17 @@ class GenOne:
                     pianoroll=pianoroll,
                 )
             )
+
+        # TODO: DO THIS SOMEWHER EELSE OR GET VALUES FROM CONFIG
+        tempo_array = config.tempo_array
+        
+        if _tempo is not None:
+            beat_resolution = 4
+            measure_resolution = 4 * beat_resolution
+            tempo_array = np.full((4 * 4 * measure_resolution, 1), _tempo)
+
         m = Multitrack(
-            tracks=tracks, tempo=config.tempo_array, resolution=config.beat_resolution
+            tracks=tracks, tempo=tempo_array, resolution=config.beat_resolution
         )
 
         print("GEN ONE OUTPUT")
@@ -91,7 +100,7 @@ class GenTwo:
     def __init__(self):
         self.inference = Inference()
 
-    def predict(self, file_name):
+    def predict(self, file_name, tempo=None):
         result = self.inference.predict()
 
         file_name, output_npz_filename, *_ = get_file_name_for_saving("npz", file_name)
@@ -103,7 +112,7 @@ class GenTwo:
         print(output_midi_filename)
 
         # Save .npz
-        self.inference.save_pianoroll(result, output_npz_filename)
+        self.inference.save_pianoroll(result, output_npz_filename, tempo)
 
         # Load .npz & write .mid
         m1 = midi_load(output_npz_filename)
