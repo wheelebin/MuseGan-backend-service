@@ -32,19 +32,19 @@ def main():
             if gen_type == "ai1" or gen_type == "ai2":
 
                 requested_operations = {
-                    #"change_instruments": {
-                        # "track_1": 27,
-                        # "track_2": -1,
-                        # "track_3": -1,
-                        # "track_4": -1,
-                        # "track_5": -1,
-                    #},
-                    #"add_drums": True,
-                    #"add_chords": [1, 2, 3, 4, 5],
-                    #"set_bpm": 100,
+                    "change_instruments": {
+                         "track_1": 27,
+                         "track_2": -1,
+                         "track_3": -1,
+                         "track_4": -1,
+                         "track_5": -1,
+                    },
+                    "add_drums": True,
+                    "add_chords": [1, 2, 3, 4, 5],
+                    "set_bpm": 100,
                     #"modify_length": 260,
                     "tonal_inversion": True,
-                    #"invert_midi": True,
+                    "invert_midi": True,
                 }
 
                 genKing.run_generation(gen_type, requested_operations)
