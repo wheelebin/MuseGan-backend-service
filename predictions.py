@@ -20,6 +20,7 @@ from models import (
     Generator,
 )
 
+from midi_utilities import tonal_inversion, invert_midi, get_midi_by_genre
 
 class GenOne:
     def __init__(self, generator_file_path):
@@ -119,3 +120,47 @@ class GenTwo:
         m1.write(output_midi_filename)
 
         return (file_name, output_midi_filename, output_npz_filename)
+
+class GenThree:
+    def __init__(self):
+        pass
+
+    def predict(self, file_name, genre):
+
+        midi = get_midi_by_genre(genre)
+        if midi == None:
+            return None
+
+        file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
+        
+        # Bellow might be running unfiltered once so would have to be a loop with a try except and break on sucess result
+        result = tonal_inversion(midi)
+
+        result.save(output_midi_filename)
+
+        return (file_name, output_midi_filename)
+
+
+
+
+
+
+
+class GenFour:
+    def __init__(self):
+        pass
+
+    def predict(self, file_name, genre):
+
+        midi = get_midi_by_genre(genre)
+        if midi == None:
+            return None
+
+        file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
+        
+        # Bellow might be running unfiltered once so would have to be a loop with a try except and break on sucess result
+        result = invert_midi(midi)
+
+        result.save(output_midi_filename)
+
+        return (file_name, output_midi_filename)

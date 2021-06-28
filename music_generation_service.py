@@ -1,5 +1,5 @@
-from predictions import GenOne, GenTwo
-from midi_utilities import convert_midi_to_wav, change_instruments, notes_to_chords, set_drums, tonal_inversion, invert_midi
+from predictions import GenOne, GenTwo, GenThree, GenFour
+from midi_utilities import convert_midi_to_wav, change_instruments, notes_to_chords, set_drums, stretch_midi_to_length, get_midi_by_genre, stretch_midi_to_length
 from utilities import get_file_name_for_saving
 from glob import glob
 import jsonpickle
@@ -8,8 +8,10 @@ import config
 
 class MusicGenKing:
     def __init__(self, generator_file_path):
-        self.genOne = GenOne(generator_file_path)
-        self.genTwo = GenTwo()
+        #self.genOne = GenOne(generator_file_path)
+        #self.genTwo = GenTwo()
+        self.genThree = GenThree()
+        self.genFour = GenFour()
 
     def run_generation(self, gen_type, requested_operations):
 
@@ -19,7 +21,14 @@ class MusicGenKing:
             tempo = requested_operations["set_bpm"]
             requested_operations.pop("set_bpm", None)
 
-        file_name, output_midi_filename = self.predict(gen_type, tempo)
+        genre = None
+        if "genre" in requested_operations:
+            genre = requested_operations["genre"]
+            midi_from_genre = get_midi_by_genre(genre) 
+            if midi_from_genre == None:
+                return None
+
+        file_name, output_midi_filename = self.predict(gen_type, tempo, genre)
 
         current_file_name = self.run_midi_mutation_ops(
             file_name, output_midi_filename, requested_operations
@@ -28,14 +37,18 @@ class MusicGenKing:
 
         return file_name, output_file_path
 
-    def predict(self, gen_type=None, tempo=None):
+    def predict(self, gen_type, tempo=None, genre=None):
 
         file_name, *_ = get_file_name_for_saving()
 
-        if gen_type == "ai1":
-            file_name, output_midi_filename, *_ = self.genOne.predict(file_name, tempo)
-        elif gen_type == "ai2":
-            file_name, output_midi_filename, *_ = self.genTwo.predict(file_name, tempo)
+        #if gen_type == "ai1":
+        #    file_name, output_midi_filename, *_ = self.genOne.predict(file_name, tempo)
+        #elif gen_type == "ai2":
+        #    file_name, output_midi_filename, *_ = self.genTwo.predict(file_name, tempo)
+        if gen_type == "ai3":
+            file_name, output_midi_filename, *_ = self.genThree.predict(file_name, genre)
+        elif gen_type == "ai4":
+            file_name, output_midi_filename, *_ = self.genFour.predict(file_name, genre)
         else:
             return None
 
@@ -50,9 +63,7 @@ class MusicGenKing:
             "add_drums": set_drums,
             "add_chords": notes_to_chords,
             # set_bpm // This runs pre prediction
-            "tonal_inversion": tonal_inversion,
-            # "modify_length": modify_length,
-            "invert_midi": invert_midi,
+            "modify_length": stretch_midi_to_length,
         }
 
         current_file_name = output_midi_filename
