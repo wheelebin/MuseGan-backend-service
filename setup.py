@@ -40,7 +40,7 @@ setup(
         # "pypianoroll == 0.4.6",
         "PyYAML",  # == 3.13",
         "scipy",  # == 1.1.0",
-        "SharedArray",  # == 3.0.0",
+        "SharedArray == 3.0.0",
         "six",  # == 1.11.0",
         "tensorboard",  # == 1.10.0",
         "tensorflow == 1.15",  # == 1.10.1",  # tensorflow-gpu

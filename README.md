@@ -63,7 +63,7 @@ https://discuss.pytorch.org/t/runtimeerror-cudnn-error-cudnn-status-not-initiali
 https://github.com/MicrosoftDocs/azure-docs/blob/master/articles/machine-learning/how-to-train-pytorch.md
 
 # This version of torch
-(1.7.0+cu101)
+(1.7.0+cu101 - https://download.pytorch.org/whl/torch_stable.html)
 
 ## Different states of this application
 This project is used to train our model, run predictions on our model and handle restful API requests (responding with predictions).
