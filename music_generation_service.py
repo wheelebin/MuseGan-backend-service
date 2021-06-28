@@ -17,12 +17,12 @@ class MusicGenKing:
 
         # Tempo needs to be set pre prediction
         tempo = None
-        if "set_bpm" in requested_operations:
+        if "set_bpm" in requested_operations and requested_operations["set_bpm"] != None:
             tempo = requested_operations["set_bpm"]
             requested_operations.pop("set_bpm", None)
 
         genre = None
-        if "genre" in requested_operations:
+        if "genre" in requested_operations and requested_operations["genre"] != None:
             genre = requested_operations["genre"]
             midi_from_genre = get_midi_by_genre(genre) 
             if midi_from_genre == None:
