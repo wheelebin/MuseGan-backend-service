@@ -8,8 +8,8 @@ import config
 
 class MusicGenKing:
     def __init__(self, generator_file_path):
-        #self.genOne = GenOne(generator_file_path)
-        #self.genTwo = GenTwo()
+        self.genOne = GenOne(generator_file_path)
+        self.genTwo = GenTwo()
         self.genThree = GenThree()
         self.genFour = GenFour()
 
@@ -27,7 +27,7 @@ class MusicGenKing:
             midi_from_genre = get_midi_by_genre(genre) 
             if midi_from_genre == None:
                 return None
-
+                
         file_name, output_midi_filename = self.predict(gen_type, tempo, genre)
 
         current_file_name = self.run_midi_mutation_ops(
@@ -41,10 +41,12 @@ class MusicGenKing:
 
         file_name, *_ = get_file_name_for_saving()
 
-        #if gen_type == "ai1":
-        #    file_name, output_midi_filename, *_ = self.genOne.predict(file_name, tempo)
-        #elif gen_type == "ai2":
-        #    file_name, output_midi_filename, *_ = self.genTwo.predict(file_name, tempo)
+        print(gen_type, tempo, genre)
+
+        if gen_type == "ai1":
+            file_name, output_midi_filename, *_ = self.genOne.predict(file_name, tempo)
+        elif gen_type == "ai2":
+            file_name, output_midi_filename, *_ = self.genTwo.predict(file_name, tempo)
         if gen_type == "ai3":
             file_name, output_midi_filename, *_ = self.genThree.predict(file_name, genre)
         elif gen_type == "ai4":
@@ -52,6 +54,7 @@ class MusicGenKing:
         else:
             return None
 
+        print("Hello: ", file_name, output_midi_filename)
         return (file_name, output_midi_filename)
 
     def run_midi_mutation_ops(
