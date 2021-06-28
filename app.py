@@ -38,11 +38,11 @@ class ChangeInstruments(BaseModel):
 
 class SongRequest(BaseModel):
     change_instruments: Optional[ChangeInstruments] = None
-    add_chords: list = []
-    add_drums: bool
-    set_bpm: int
-    modify_length: int
-    genre: str
+    add_chords: Optional[list] = []
+    add_drums: Optional[bool]
+    set_bpm: Optional[int]
+    modify_length: Optional[int]
+    genre: Optional[str]
 
 
 @app.get("/")
