@@ -61,10 +61,6 @@ def save(path: Union[str, Path], multitrack: "Multitrack", compressed: bool = Tr
       file.
 
     """
-
-    print("multitrack: ", multitrack)
-    print("multitrack.resolution: ", multitrack.resolution)
-    print("multitrack.name: ", multitrack.name)
     info_dict: Dict = {
         "resolution": multitrack.resolution,
         "name": multitrack.name,
@@ -91,7 +87,6 @@ def save(path: Union[str, Path], multitrack: "Multitrack", compressed: bool = Tr
 
     compression = zipfile.ZIP_DEFLATED if compressed else zipfile.ZIP_STORED
     with zipfile.ZipFile(path, "a") as zip_file:
-        print("info_dict: ", info_dict)
         zip_file.writestr("info.json", json.dumps(info_dict), compression)
 
 

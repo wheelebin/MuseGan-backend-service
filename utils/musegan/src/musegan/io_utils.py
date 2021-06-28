@@ -297,7 +297,6 @@ def save_pianoroll(
     lowest_pitch,
     track_names,
 ):
-    print(filename, programs, is_drums, tempo, beat_resolution, lowest_pitch)
     """Saves a batched pianoroll array to a npz file."""
     if not np.issubdtype(pianoroll.dtype, np.bool_):
         raise TypeError("Input pianoroll array must have a boolean dtype.")
@@ -348,11 +347,9 @@ def save_pianoroll(
         )
 
     # for idx in range(pianoroll_.shape[2]):
-    #    print("WHATS THIS: ", pianoroll_[..., idx])
     #    tracks.append(
     #        pypianoroll.Track(pianoroll_[..., idx], programs[idx], is_drums[idx])
     #    )
-    print(tracks)
 
     # TODO: DO THIS SOMEWHER EELSE OR GET VALUES FROM CONFIG
     beat_resolution = 4
@@ -363,5 +360,4 @@ def save_pianoroll(
     multitrack = pypianoroll.Multitrack(
         tracks=tracks, tempo=tempo_array, resolution=beat_resolution
     )
-    print("filename:  ", filename)
     multitrack.save(filename)

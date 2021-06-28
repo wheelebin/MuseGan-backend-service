@@ -12,12 +12,13 @@ import sqlite3
 from datetime import datetime
 import random
 
-def cut_midi(input_file, output_file, start_time, end_time):
+
+def cut_midi(input_midi, start_time, end_time):
     """
     Cuts midi input_file from start_time to end_time and saves cutted part into
     output_file.
     """
-    input_midi = MidiFile(input_file)
+    print('INP: ', input_midi.length)
     output_midi = MidiFile()
     tempo = 600000
     if input_midi.type == 2:
@@ -29,22 +30,26 @@ def cut_midi(input_file, output_file, start_time, end_time):
     for original_track in input_midi.tracks:
         for msg in original_track:
             if msg.type == "set_tempo":
-                print(msg.tempo)
+                tempo = msg.tempo
+                break
+    
+    for original_track in output_midi.tracks:
+        for msg in original_track:
+            if msg.type == "set_tempo":
                 tempo = msg.tempo
                 break
 
     for original_track in input_midi.tracks:
         new_track = MidiTrack()
-        total_time = 0
+        time_passed = 0
         for msg in original_track:
             if msg.type in ["note_on", "note_off"]:
-                total_time += tick2second(msg.time, input_midi.ticks_per_beat, tempo)
-                if total_time < start_time or total_time > end_time:
-                    continue
-            new_track.append(msg)
+                time_passed += tick2second(msg.time, input_midi.ticks_per_beat, tempo)
+                if time_passed > start_time and time_passed < end_time:
+                    new_track.append(msg)
         output_midi.tracks.append(new_track)
 
-    output_midi.save(output_file)
+    return output_midi
 
 
 def join_midi(input_files, output_file=None):
@@ -94,7 +99,6 @@ def stretch_midi_to_length(input_midi_path, file_name, length):
     tracks_length = []
     for idx, file in enumerate([input_midi_path, input_midi_path]):
         input_midi = MidiFile(file)
-        print("START LENGTH: ", input_midi.length)
         if input_midi.type == 2:
             continue
         # Copying the time metrics between both files
@@ -123,7 +127,6 @@ def stretch_midi_to_length(input_midi_path, file_name, length):
     for track in new_tracks:
         output_midi.tracks.append(track)
 
-    print("START LENGTH: ", output_midi.length)
     output_file_name, output_file_path, *_ = get_file_name_for_saving(
         "mid", file_name, "STRETCH_MIDI"
     )
@@ -270,7 +273,6 @@ def cut_midi_in_measures(input_file, n_bins=4, n_parts=10):
         try:
             midi_temp = m21.stream.Score()
             midi_temp.append(midifile.measures(i * n_bins, i * n_bins + n_bins))
-            print(input_file[:-4] + "_" + str(i) + ".mid")
             midi_temp.write("midi", input_file[:-4] + "_" + str(i) + ".mid")
         except:
             break
@@ -378,7 +380,7 @@ def change_instruments(input_file, file_name, new_instruments_by_track):
         key = tracks[track_i]
 
         # Append track as is if not in new_instruments_by_track arr
-        if key not in new_instruments_by_track:
+        if key not in new_instruments_by_track or new_instruments_by_track[key] == None:
             out.tracks.append(track)
             continue
         
@@ -386,7 +388,6 @@ def change_instruments(input_file, file_name, new_instruments_by_track):
 
         # Don't append track if -1, will pretty much "delete" the track
         if new_instruments_by_track[key] == -1:
-            print("Removing track by not appending", key)
             continue
 
         for message in track:
@@ -394,7 +395,6 @@ def change_instruments(input_file, file_name, new_instruments_by_track):
             # Modify with program_change message and append or just append
 
             if message.type == "program_change":
-                print("Modifying track")
                 new_track.append(
                     message.copy(program=new_instruments_by_track[key])
                 )
@@ -467,8 +467,6 @@ def tone_invert_main(mid, basenote):
                 else:
                     if "note" in dir(message):
                         inverted_note = basenote - (message.note - basenote)
-                        #print(basenote, message.note, (message.note - basenote))
-                        #print(inverted_note)
                         #TODO: Sometimes the inverted_note is not in between 0...127 (Like -1)
                         # Handle that
                         new_track.append(
@@ -551,11 +549,9 @@ def get_midi_by_genre(genre):
     MID_files = glob(genre_folder + '/**/*.MID', recursive=True)
 
     if mid_files:
-        print('mid_files: ', len(mid_files))
         midi_files.extend(mid_files)
 
     if MID_files:
-        print('MID_files: ', len(MID_files))
         midi_files.extend(MID_files)
 
     return random.choice(midi_files)
@@ -577,7 +573,6 @@ def insert_conversion_in_db(con, cur, success, originalFile, newFile, msg):
     #dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     ## Fix bellow
     #command = "INSERT INTO conversions VALUES ('%s','%s','%s', '%s', '%s')" % (dt_string, success, originalFile.replace("'", "").replace('"', ""), newFile, msg)
-    #print(command)
     #cur.execute(command)
     #con.commit()
     return
@@ -585,13 +580,10 @@ def insert_conversion_in_db(con, cur, success, originalFile, newFile, msg):
 
 #con, cur = open_db()
 
-def invert(file, file_name, output_dir, genre):
 
-    mid = MidiFile(file)
-    # Double mid if shorter than 3 minutes (180 seconds)
-    if mid.length < 180:
-        mid = join_midi([file, file])
+    
 
+def check_midi(file):
 
     file_size_b = os.path.getsize(file)
     formated_size, label = format_bytes(file_size_b)
@@ -601,33 +593,15 @@ def invert(file, file_name, output_dir, genre):
         print("DELETED MIDI FILE: [REASON: %s] %s" % ('Too small', file))
         return None
 
-    
-    # Try rover on midi
-    output_midi = invert_midi_main(mid)
-    if output_midi is None or output_midi.length == 0:
-        os.remove(file)
-        print("DELETED MIDI FILE: [REASON: %s] %s" % ('Cant convert ROVER', file))
-        return None
+    mid = MidiFile(file)
+    # Double mid if shorter than 3 minutes (180 seconds)
+    if mid.type != 2 and mid.length < 180:
+        mid = join_midi([file, file])
 
+    if mid.type != 2 and mid.length > 500:
+        mid = cut_midi(mid, 0, 500)
 
-    
-    # Try tonal inversion on file
-    # I don't think I need to try tonal inversion on rover output as well
-    output_midi = tone_invert_main(mid, 50)
-    if output_midi is None or output_midi.length == 0:
-        os.remove(file)
-        print("DELETED MIDI FILE: [REASON: %s] %s" % ('Cant convert INVERSION', file))
-        return None
-
-    
-    # Save original file since it passed above conditionals
-    og_midi = MidiFile(file)
-    output_file_name, *_ = get_file_name_for_saving(
-        "mid", file_name, genre
-    )
-    output_file_path = "%s/%s.mid" % (output_dir, output_file_name)
-    og_midi.save(output_file_path)
-    return output_file_path
+    return True
 
 def proccess_midi(file, file_name, output_dir, genre):
 
@@ -672,6 +646,8 @@ def proccess_midi(file, file_name, output_dir, genre):
     output_file_path = "%s/%s.mid" % (output_dir, output_file_name)
     og_midi.save(output_file_path)
     return output_file_path
+
+
 
 def proccess_raw_midis(midi_files, output_dir, genre):
     for file in midi_files:
@@ -729,18 +705,16 @@ def proccess_raw_genres():
         MID_files = glob(genre_folder + '/**/*.MID', recursive=True)
 
         if mid_files:
-            print('mid_files: ', len(mid_files))
             midi_files.extend(mid_files)
 
         if MID_files:
-            print('MID_files: ', len(MID_files))
             midi_files.extend(MID_files)
 
         print('Amount of mid files to proccess: ', len(midi_files))
         
         proccess_raw_midis(midi_files, genre_output_dir, genre)
 
-    
+
 
 #proccess_raw_genres()
 #con.close()

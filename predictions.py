@@ -1,3 +1,4 @@
+from struct import error
 import numpy as np
 import torch
 
@@ -20,7 +21,7 @@ from models import (
     Generator,
 )
 
-from midi_utilities import tonal_inversion, invert_midi, get_midi_by_genre
+from midi_utilities import tonal_inversion, invert_midi, get_midi_by_genre, check_midi
 
 class GenOne:
     def __init__(self, generator_file_path):
@@ -83,10 +84,6 @@ class GenOne:
             tracks=tracks, tempo=tempo_array, resolution=config.beat_resolution
         )
 
-        print("GEN ONE OUTPUT")
-        print(output_npz_filename)
-        print(output_midi_filename)
-
         # Save .npz
         m.save(output_npz_filename)
 
@@ -107,11 +104,6 @@ class GenTwo:
         file_name, output_npz_filename, *_ = get_file_name_for_saving("npz", file_name)
         file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
 
-        print("GEN TWO OUTPUT")
-        print(result)
-        print(output_npz_filename)
-        print(output_midi_filename)
-
         # Save .npz
         self.inference.save_pianoroll(result, output_npz_filename, tempo)
 
@@ -126,15 +118,23 @@ class GenThree:
         pass
 
     def predict(self, file_name, genre):
-
-        midi = get_midi_by_genre(genre)
-        if midi == None:
-            return None
-
-        file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
-        
-        # Bellow might be running unfiltered once so would have to be a loop with a try except and break on sucess result
-        result = tonal_inversion(midi)
+        n = 0
+        while True:
+            if n > 5:
+                print('FAILED 5 ATTEMPS OF INVERT MIDI')
+                return None
+            print('genre: ', genre)
+            midi = get_midi_by_genre(genre)
+            if midi == None or check_midi(midi) != True:
+                return None
+            file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
+            try:
+                result = tonal_inversion(midi)
+                break
+            except:
+                print('Could not invert midi: ', midi)
+                n += 1
+                pass
 
         result.save(output_midi_filename)
 
@@ -152,14 +152,31 @@ class GenFour:
 
     def predict(self, file_name, genre):
 
-        midi = get_midi_by_genre(genre)
-        if midi == None:
-            return None
-
-        file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
         
-        # Bellow might be running unfiltered once so would have to be a loop with a try except and break on sucess result
-        result = invert_midi(midi)
+        
+       
+        n = 0
+        while True:
+
+            if n > 5:
+                print('FAILED 5 ATTEMPS OF INVERT MIDI')
+                return None
+            try:
+
+                midi = get_midi_by_genre(genre)
+                if midi == None or check_midi(midi) != True:
+                    return None
+
+                file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
+
+
+                result = invert_midi(midi)
+                break
+            except error:
+                print(error)
+                print('Could not invert midi: ', midi)
+                n += 1
+                pass
 
         result.save(output_midi_filename)
 

@@ -27,7 +27,8 @@ class MusicGenKing:
             midi_from_genre = get_midi_by_genre(genre) 
             if midi_from_genre == None:
                 return None
-                
+
+        print(requested_operations)
         file_name, output_midi_filename = self.predict(gen_type, tempo, genre)
 
         current_file_name = self.run_midi_mutation_ops(
@@ -41,20 +42,17 @@ class MusicGenKing:
 
         file_name, *_ = get_file_name_for_saving()
 
-        print(gen_type, tempo, genre)
-
         if gen_type == "ai1":
             file_name, output_midi_filename, *_ = self.genOne.predict(file_name, tempo)
         elif gen_type == "ai2":
             file_name, output_midi_filename, *_ = self.genTwo.predict(file_name, tempo)
-        if gen_type == "ai3":
+        elif gen_type == "ai3":
             file_name, output_midi_filename, *_ = self.genThree.predict(file_name, genre)
         elif gen_type == "ai4":
             file_name, output_midi_filename, *_ = self.genFour.predict(file_name, genre)
         else:
             return None
 
-        print("Hello: ", file_name, output_midi_filename)
         return (file_name, output_midi_filename)
 
     def run_midi_mutation_ops(
@@ -98,8 +96,6 @@ def predict():
 def run_generation(generator, requested_operations):
 
     a = MusicGenKing()
-
-    print(requested_operations)
 
     file_name, output_midi_filename, *_ = a.predict("ai2")
 

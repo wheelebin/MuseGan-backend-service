@@ -6,7 +6,7 @@ from fastapi.encoders import jsonable_encoder
 
 # Custom imports
 import config
-from utilities import make_project_dirs
+from utilities import get_file_name_for_saving, make_project_dirs
 from music_generation_service import get_wav_by_name, MusicGenKing
 
 from pydantic import BaseModel
@@ -42,6 +42,7 @@ class SongRequest(BaseModel):
     add_drums: bool
     set_bpm: int
     modify_length: int
+    genre: str
 
 
 @app.get("/")
@@ -51,9 +52,16 @@ def read_root():
 
 @app.post("/songs")
 async def song(gen_type: str, song_request: SongRequest):
-    print(gen_type, song_request)
-    file_name, output_file_path = genKing.run_generation(gen_type, jsonable_encoder(song_request))
-    print(file_name, output_file_path)
+    ops = {}
+    if gen_type == 'ai1' or gen_type == 'ai2':
+        ops = song_request
+    elif gen_type == 'ai3' or gen_type == 'ai4':
+        ops["genre"] = song_request.genre
+        ops["modify_length"] = song_request.modify_length
+    else:
+        return FileResponse()
+
+    file_name, output_file_path = genKing.run_generation(gen_type, jsonable_encoder(ops))
     return FileResponse(output_file_path)
 
 @app.get("/songs/{song_id}")
