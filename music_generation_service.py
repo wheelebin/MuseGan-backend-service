@@ -8,8 +8,8 @@ import config
 
 class MusicGenKing:
     def __init__(self, generator_file_path):
-        self.genOne = GenOne(generator_file_path)
-        self.genTwo = GenTwo()
+        #self.genOne = GenOne(generator_file_path)
+        #self.genTwo = GenTwo()
         self.genThree = GenThree()
         self.genFour = GenFour()
 
@@ -63,14 +63,13 @@ class MusicGenKing:
             "change_instruments": change_instruments,
             "add_drums": set_drums,
             "add_chords": notes_to_chords,
-            # set_bpm // This runs pre prediction
             "modify_length": stretch_midi_to_length,
         }
 
         current_file_name = output_midi_filename
 
         for operation_key in available_operations:
-            if operation_key in requested_operations:
+            if operation_key in requested_operations and requested_operations[operation_key] != None:
 
                 operation_value = requested_operations[operation_key]
                 operation = available_operations[operation_key]
