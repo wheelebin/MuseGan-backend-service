@@ -22,6 +22,7 @@ setup(
         "uvicorn",
         "midi2audio",
         "ipywidgets",
+        "gunicorn",
         "pypianoroll >= 1.0.2",
         # "absl-py",
         "jsonpickle",

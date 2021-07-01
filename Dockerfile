@@ -1,18 +1,15 @@
 # pull official base image
-FROM python:3.6-slim-buster
+FROM tiangolo/uvicorn-gunicorn:python3.6
 
-# set work directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# set environment variables
-#ENV PYTHONDONTWRITEBYTECODE 1
+RUN apt-get update && apt-get install build-essential -y
 
-# install dependencies
-RUN pip install --upgrade pip
+#RUN pip install --upgrade pip
 RUN pip install pip-tools
-COPY ./requirements.txt /usr/src/app/requirements.txt
-#RUN pip install -r requirements.txt
-RUN pip-sync
+COPY ./requirements.txt /app/requirements.txt
 
-# copy project
-COPY . /usr/src/app/
+RUN pip-sync -f https://download.pytorch.org/whl/torch_stable.html
+
+COPY . /app/
+
