@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./templates:/etc/nginx/templates
+      - ./data/results:/usr/share/nginx/html/results
+    depends_on:
+      - web
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+  #redis:
+  #  image: "redis:alpine"

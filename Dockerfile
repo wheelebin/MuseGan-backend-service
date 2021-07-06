@@ -1,5 +1,5 @@
 # pull official base image
-FROM tiangolo/uvicorn-gunicorn:python3.6
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.6
 
 WORKDIR /app
 
@@ -13,3 +13,8 @@ RUN pip-sync -f https://download.pytorch.org/whl/torch_stable.html
 
 COPY . /app/
 
+ENV PYTHONPATH /app
+ENV PORT 8000
+ENV MAX_WORKERS 1
+
+#CMD gunicorn -b 0.0.0.0 -w 1 -k uvicorn.workers.UvicornWorker app:app

@@ -105,6 +105,11 @@ def run_generation(generator, requested_operations):
 
 
 def get_wav_by_name(file_name):
-    file_path = config.RESULTS_DIR + "/%s*.wav" % file_name
-    wav_file = glob(file_path)[0]
-    return wav_file
+    file_path = config.RESULTS_DIR + "/%s_CONVERT_MID_TO_WAV.wav" % file_name
+    
+    wav_files = glob(file_path)
+
+    if len(wav_files) == 0:
+        return None
+        
+    return wav_files[0]
