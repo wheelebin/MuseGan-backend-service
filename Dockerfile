@@ -3,7 +3,7 @@ FROM tiangolo/uvicorn-gunicorn-fastapi:python3.6
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install build-essential -y
+RUN apt-get update && apt-get install fluidsynth build-essential -y
 
 #RUN pip install --upgrade pip
 RUN pip install pip-tools
