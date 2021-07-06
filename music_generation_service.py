@@ -8,8 +8,8 @@ import config
 
 class MusicGenKing:
     def __init__(self, generator_file_path):
-        #self.genOne = GenOne(generator_file_path)
-        #self.genTwo = GenTwo()
+        self.genOne = GenOne(generator_file_path)
+        self.genTwo = GenTwo()
         self.genThree = GenThree()
         self.genFour = GenFour()
 
@@ -111,5 +111,5 @@ def get_wav_by_name(file_name):
 
     if len(wav_files) == 0:
         return None
-        
+
     return wav_files[0]
