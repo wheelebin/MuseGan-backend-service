@@ -83,7 +83,7 @@ async def song(gen_type: str, user_id: str, song_request: SongRequest):
         ops["genre"] = song_request.genre
         ops["modify_length"] = song_request.modify_length
     else:
-        return FileResponse()
+        return HTTPException(status_code=400, detail="Sound not created")
 
     encodedOps = jsonable_encoder(ops)
 
@@ -92,7 +92,8 @@ async def song(gen_type: str, user_id: str, song_request: SongRequest):
     track_added = user_srvc.add_track(user.get('id', None), file_name, output_file_path)
 
     if track_added:
-        return user_srvc.get_track_by_file_name(file_name)
+        return { 'file_name': file_name }
+        #return user_srvc.get_track_by_file_name(file_name)
 
     return HTTPException(status_code=400, detail="Sound not created")
 
