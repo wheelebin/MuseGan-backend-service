@@ -8,8 +8,8 @@ import config
 
 class MusicGenKing:
     def __init__(self, generator_file_path):
-        self.genOne = GenOne(generator_file_path)
-        self.genTwo = GenTwo()
+        #self.genOne = GenOne(generator_file_path)
+        #self.genTwo = GenTwo()
         self.genThree = GenThree()
         self.genFour = GenFour()
 

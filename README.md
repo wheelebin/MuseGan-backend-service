@@ -157,3 +157,24 @@ I need to find a way to easily:
 
 - WRITE OPERATIONS TO HAPPEN WHEN THEY NEED TO IN A LOOP SO YOU ONLY NEED TO LOOP ONCE AND SAVE ONCE
 - (Do this in your own project)
+
+
+# Firebase
+- How to auth (https://firebase.google.com/docs/auth)
+    - This is more of an overview of how to implement firebase auth into your client (ios, android, web (front-end) and etc...)
+    - Quotes from above
+        - To sign a user into your app, you first get authentication credentials from the user.
+            - These credentials can be the user's email address and password, or an OAuth token from a federated identity provider.
+
+        - Then, you pass these credentials to the Firebase Authentication SDK.
+            - Our backend services will then verify those credentials and return a response to the client.
+
+        - After a successful sign in, you can access the user's basic profile information
+
+        - You can also use the provided authentication token to verify the identity of users in your own backend services.
+
+- Verify id tokens (https://firebase.google.com/docs/auth/admin/verify-id-tokens)
+    - This is what I'll be doing in the back-end to create and manage users and etc
+    
+    - Take the uid and try to get the user, if it dosen't exist create it.
+    - Than do whatever you need to do with the uid / user.
