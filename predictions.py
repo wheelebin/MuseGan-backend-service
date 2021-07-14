@@ -9,7 +9,6 @@ import torch
 from utils.musegan.src.musegan.packages.pypianoroll import Multitrack, Track
 from utils.musegan.src.musegan.packages.pypianoroll import load as midi_load
 
-
 import uuid
 from glob import glob
 from utils.musegan.src.inference import Inference
@@ -113,28 +112,50 @@ class GenTwo:
 
         return (file_name, output_midi_filename, output_npz_filename)
 
+
+def get_check_mid_by_genre(genre, tries=1):
+    n=0
+    while True:
+        if n > tries:
+            print('FAILED 5 ATTEMPS OF INVERT MIDI')
+            return None
+
+        try:
+            midi = get_midi_by_genre(genre)
+            if midi == None or check_midi(midi) != True:
+                print('MIDI CHECK FAILED')
+                continue
+            
+            return midi
+        except:
+            continue
+        
+    
+
+
 class GenThree:
     def __init__(self):
         pass
 
     def predict(self, file_name, genre):
         n = 0
-        while True:
+        while True:    
             if n > 5:
                 print('FAILED 5 ATTEMPS OF INVERT MIDI')
-                return None
-            print('genre: ', genre)
-            midi = get_midi_by_genre(genre)
-            if midi == None or check_midi(midi) != True:
-                return None
-            file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
+                return None, None, None
+            
+            n += 1
+            
             try:
+                midi = get_check_mid_by_genre(genre, 5)
+                if midi == None:
+                    continue
+                file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
                 result = tonal_inversion(midi)
                 break
             except:
-                print('Could not invert midi: ', midi)
-                n += 1
-                pass
+                print('Could not load or invert midi')
+                continue
 
         result.save(output_midi_filename)
 
@@ -151,21 +172,20 @@ class GenFour:
         pass
 
     def predict(self, file_name, genre):
-
-        
-        
-       
         n = 0
         while True:
 
             if n > 5:
                 print('FAILED 5 ATTEMPS OF INVERT MIDI')
-                return None
+                return None, None, None
+
+            n += 1
+
             try:
 
-                midi = get_midi_by_genre(genre)
-                if midi == None or check_midi(midi) != True:
-                    return None
+                midi = get_check_mid_by_genre(genre)
+                if midi == None:
+                    continue
 
                 file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
 
@@ -174,9 +194,8 @@ class GenFour:
                 break
             except error:
                 print(error)
-                print('Could not invert midi: ', midi)
-                n += 1
-                pass
+                print('Could not load or invert midi')
+                continue
 
         result.save(output_midi_filename)
 

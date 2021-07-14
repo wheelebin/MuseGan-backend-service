@@ -29,12 +29,18 @@ bleach==3.3.0
     # via nbconvert
 bokeh==2.3.2
     # via livelossplot
+cachecontrol==0.12.6
+    # via firebase-admin
 cached-property==1.5.2
     # via h5py
+cachetools==4.2.2
+    # via google-auth
 certifi==2020.12.5
     # via requests
 cffi==1.14.5
-    # via argon2-cffi
+    # via
+    #   argon2-cffi
+    #   google-crc32c
 chardet==4.0.0
     # via
     #   music21
@@ -60,6 +66,8 @@ fastapi==0.65.0
     # via museganKing (setup.py)
 filelock==3.0.12
     # via gdown
+firebase-admin==5.0.1
+    # via museganKing (setup.py)
 future==0.18.2
     # via torch
 gast==0.2.2
@@ -68,10 +76,42 @@ gast==0.2.2
     #   tensorflow
 gdown==3.13.0
     # via museganKing (setup.py)
+google-api-core[grpc]==1.31.0
+    # via
+    #   firebase-admin
+    #   google-api-python-client
+    #   google-cloud-core
+    #   google-cloud-firestore
+google-api-python-client==2.13.0
+    # via firebase-admin
+google-auth-httplib2==0.1.0
+    # via google-api-python-client
+google-auth==1.32.1
+    # via
+    #   google-api-core
+    #   google-api-python-client
+    #   google-auth-httplib2
+    #   google-cloud-core
+    #   google-cloud-storage
+google-cloud-core==1.7.1
+    # via
+    #   google-cloud-firestore
+    #   google-cloud-storage
+google-cloud-firestore==2.1.3
+    # via firebase-admin
+google-cloud-storage==1.41.0
+    # via firebase-admin
+google-crc32c==1.1.2
+    # via google-resumable-media
 google-pasta==0.2.0
     # via tensorflow
+google-resumable-media==1.3.1
+    # via google-cloud-storage
+googleapis-common-protos==1.53.0
+    # via google-api-core
 grpcio==1.34.1
     # via
+    #   google-api-core
     #   museganKing (setup.py)
     #   tensorboard
     #   tensorflow
@@ -81,6 +121,10 @@ h11==0.12.0
     # via uvicorn
 h5py==3.1.0
     # via keras-applications
+httplib2==0.19.1
+    # via
+    #   google-api-python-client
+    #   google-auth-httplib2
 idna==2.10
     # via requests
 imageio==2.9.0
@@ -164,6 +208,8 @@ mistune==0.8.4
     # via nbconvert
 more-itertools==8.7.0
     # via music21
+msgpack==1.0.2
+    # via cachecontrol
 music21==6.7.1
     # via museganKing (setup.py)
 nbclient==0.5.3
@@ -203,6 +249,8 @@ packaging==20.9
     # via
     #   bleach
     #   bokeh
+    #   google-api-core
+    #   google-cloud-firestore
 pandocfilters==1.4.3
     # via nbconvert
 parso==0.8.2
@@ -225,15 +273,26 @@ prometheus-client==0.10.1
     # via notebook
 prompt-toolkit==3.0.18
     # via ipython
+proto-plus==1.19.0
+    # via google-cloud-firestore
 protobuf==3.17.3
     # via
+    #   google-api-core
+    #   googleapis-common-protos
     #   museganKing (setup.py)
+    #   proto-plus
     #   tensorboard
     #   tensorflow
 ptyprocess==0.7.0
     # via
     #   pexpect
     #   terminado
+pyasn1-modules==0.2.8
+    # via google-auth
+pyasn1==0.4.8
+    # via
+    #   pyasn1-modules
+    #   rsa
 pycparser==2.20
     # via cffi
 pydantic==1.8.1
@@ -245,6 +304,7 @@ pygments==2.9.0
     #   nbconvert
 pyparsing==2.4.7
     # via
+    #   httplib2
     #   matplotlib
     #   packaging
 pypianoroll==1.0.4
@@ -258,6 +318,10 @@ python-dateutil==2.8.1
     #   bokeh
     #   jupyter-client
     #   matplotlib
+pytz==2021.1
+    # via
+    #   google-api-core
+    #   google-cloud-firestore
 pyyaml==5.4.1
     # via
     #   bokeh
@@ -267,7 +331,13 @@ pyzmq==22.0.3
     #   jupyter-client
     #   notebook
 requests[socks]==2.25.1
-    # via gdown
+    # via
+    #   cachecontrol
+    #   gdown
+    #   google-api-core
+    #   google-cloud-storage
+rsa==4.7.2
+    # via google-auth
 scipy==1.5.4
     # via
     #   museganKing (setup.py)
@@ -283,7 +353,13 @@ six==1.15.0
     #   bleach
     #   cycler
     #   gdown
+    #   google-api-core
+    #   google-api-python-client
+    #   google-auth
+    #   google-auth-httplib2
+    #   google-cloud-core
     #   google-pasta
+    #   google-resumable-media
     #   grpcio
     #   jsonschema
     #   keras-preprocessing
@@ -344,6 +420,8 @@ typing-extensions==3.7.4.3
     #   pydantic
     #   torch
     #   uvicorn
+uritemplate==3.0.1
+    # via google-api-python-client
 urllib3==1.26.4
     # via requests
 uvicorn==0.14.0

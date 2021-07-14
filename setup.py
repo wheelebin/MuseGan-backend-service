@@ -20,6 +20,7 @@ setup(
         "music21",
         "fastapi",
         "uvicorn",
+        "firebase-admin",
         "midi2audio",
         "ipywidgets",
         "gunicorn",

@@ -1,12 +1,42 @@
 import uuid
+import firebase_admin
+from firebase_admin import credentials, auth
+from config import ROOT_DIR
 
-user_id_list = [] # { id: "1234-3123d-a23-sa213" }
+
+user_id_list = [] # { id: "1234-3123d-a23-sa213", firebase_uid: "23123-312-3-123-21-3-32134" }
 tracks_list = [] # { file_name: "qewqe", output_midi_filename: "/dasds/asd/qewqe.mid", user_id: "1234-3123d-a23-sa213"  }
 
+cred = credentials.Certificate(ROOT_DIR+"/music-generator-9578a-firebase-adminsdk-sa6xv-7dd5a859e8.json")
+firebase_admin.initialize_app(cred)
 
-def add_user():
+class FireBaseTokenRevokedError(Exception):
+  pass
+
+class FireBaseTokenInvalidError(Exception):
+  pass
+
+def validate_firebase_token(id_token):
+  try:
+      # Verify the ID token while checking if the token is revoked by
+      # passing check_revoked=True.
+      decoded_token = auth.verify_id_token(id_token, check_revoked=True)
+      # Token is valid and not revoked.
+      uid = decoded_token['uid']
+      return uid
+  except auth.RevokedIdTokenError:
+      # Token revoked, inform the user to reauthenticate or signOut().
+      raise FireBaseTokenRevokedError
+  except auth.InvalidIdTokenError:
+      # Token is invalid
+      raise FireBaseTokenInvalidError
+
+def add_user(id_token):
   id = uuid.uuid4()
-  user_id_list.append({ 'id': str(id) })
+
+  #uid = validate_firebase_token(id_token)
+
+  user_id_list.append({ 'id': str(id) }) #, 'firebase_uid': uid
   return id
 
 def get_user(user_id):

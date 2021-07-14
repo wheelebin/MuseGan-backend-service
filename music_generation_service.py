@@ -4,12 +4,15 @@ from utilities import get_file_name_for_saving
 from glob import glob
 import jsonpickle
 import config
+from struct import error
 
+class MuseGenKingError(Exception):
+    pass
 
 class MusicGenKing:
     def __init__(self, generator_file_path):
-        #self.genOne = GenOne(generator_file_path)
-        #self.genTwo = GenTwo()
+        self.genOne = GenOne(generator_file_path)
+        self.genTwo = GenTwo()
         self.genThree = GenThree()
         self.genFour = GenFour()
 
@@ -26,7 +29,7 @@ class MusicGenKing:
             genre = requested_operations["genre"]
             midi_from_genre = get_midi_by_genre(genre) 
             if midi_from_genre == None:
-                return None
+                raise MuseGenKingError("Genre does not exist.")
 
         print(requested_operations)
         file_name, output_midi_filename = self.predict(gen_type, tempo, genre)
@@ -51,7 +54,11 @@ class MusicGenKing:
         elif gen_type == "ai4":
             file_name, output_midi_filename, *_ = self.genFour.predict(file_name, genre)
         else:
-            return None
+            raise MuseGenKingError("Incorrect gen type.")
+
+        if file_name == None:
+            raise MuseGenKingError("Could not create song due to lack of valid mid files.")
+
 
         return (file_name, output_midi_filename)
 
