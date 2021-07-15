@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Firebase Hosting</title>
+
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/8.7.1/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/8.7.1/firebase-auth.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-database.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-firestore.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-functions.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-storage.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-analytics.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-remote-config.js"></script>
+  <script defer src="/__/firebase/8.7.1/firebase-performance.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />
+  <!-- 
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+  <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+
+</head>
+
+<body>
+
+  <div id="firebaseui-auth-container"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const loadEl = document.querySelector('#load');
+      // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+      // // The Firebase SDK is initialized and available here!
+      //
+      // firebase.auth().onAuthStateChanged(user => { });
+      // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+      // firebase.firestore().doc('/foo/bar').get().then(() => { });
+      // firebase.functions().httpsCallable('yourFunction')().then(() => { });
+      // firebase.messaging().requestPermission().then(() => { });
+      // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+      // firebase.analytics(); // call to activate
+      // firebase.analytics().logEvent('tutorial_completed');
+      // firebase.performance(); // call to activate
+      //
+      // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+      try {
+
+
+        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        ui.start('#firebaseui-auth-container', {
+          signInOptions: [
+            {
+              provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+              requireDisplayName: false
+            }
+          ],
+          signInSuccessUrl: window.location.href,
+
+          callbacks: {
+            signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+              // User successfully signed in.
+              // Return type determines whether we continue the redirect automatically
+              // or whether we leave that to developer to handle.
+              console.log(authResult, redirectUrl)
+              firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+                // Send token to your backend via HTTPS
+                // ...
+                console.log(idToken)
+              }).catch(function (error) {
+                // Handle error
+              });
+              return false;
+            }
+          }
+        })
+
+
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+
+</html>

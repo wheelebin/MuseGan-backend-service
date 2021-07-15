@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />
+</head>
+
+<body>
+    <div id="firebase-ui-auth"></div>
+
+
+    <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-app.js"></script>
+
+    <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-analytics.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.7.1/firebase-firestore.js"></script>
+
+
+
+
+
+    <script>
+
+        var firebaseConfig = {
+            apiKey: "AIzaSyCOD1Cdl9rdIrgMwoFnmSoYH2DkuO7Y8CU",
+            authDomain: "music-generator-9578a.firebaseapp.com",
+            databaseURL: "https://music-generator-9578a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "music-generator-9578a",
+            storageBucket: "music-generator-9578a.appspot.com",
+            messagingSenderId: "87992880719",
+            appId: "1:87992880719:web:ed8e94977183cb9d4aa43a",
+            measurementId: "G-RKVVZ8Y8BW"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+
+        function init() {
+            var ui = new firebaseui.auth.AuthUI(firebase.auth());
+            ui.start('#firebaseui-auth-container', {
+                signInOptions: [
+                    firebase.auth.EmailAuthProvider.PROVIDER_ID
+                ],
+                // Other config options...
+            });
+        }
+
+
+        var interval = setInterval(sdkIsLoaded, 500);
+
+        function sdkIsLoaded() {
+            try {
+                if (window.firebaseui) {
+                    clearInterval(interval)
+                    console.log(window.firebaseui)
+                    init()
+                    return true
+                }
+
+            } catch (error) {
+                return false
+            }
+
+        }
+    </script>
+</body>
+
+</html>

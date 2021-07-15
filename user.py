@@ -2,9 +2,9 @@ import uuid
 import firebase_admin
 from firebase_admin import credentials, auth
 from config import ROOT_DIR
+from struct import error
 
-
-user_id_list = [] # { id: "1234-3123d-a23-sa213", firebase_uid: "23123-312-3-123-21-3-32134" }
+user_id_list = [] # { id: "1234-3123d-a23-sa213", uid: "23123-312-3-123-21-3-32134" }
 tracks_list = [] # { file_name: "qewqe", output_midi_filename: "/dasds/asd/qewqe.mid", user_id: "1234-3123d-a23-sa213"  }
 
 cred = credentials.Certificate(ROOT_DIR+"/music-generator-9578a-firebase-adminsdk-sa6xv-7dd5a859e8.json")
@@ -20,24 +20,56 @@ def validate_firebase_token(id_token):
   try:
       # Verify the ID token while checking if the token is revoked by
       # passing check_revoked=True.
-      decoded_token = auth.verify_id_token(id_token, check_revoked=True)
-      # Token is valid and not revoked.
+      decoded_token = auth.verify_id_token(id_token)
       uid = decoded_token['uid']
       return uid
-  except auth.RevokedIdTokenError:
-      # Token revoked, inform the user to reauthenticate or signOut().
-      raise FireBaseTokenRevokedError
-  except auth.InvalidIdTokenError:
-      # Token is invalid
-      raise FireBaseTokenInvalidError
+  except:
+    raise
+  #except auth.RevokedIdTokenError:
+  #    # Token revoked, inform the user to reauthenticate or signOut().
+  #    raise
+  #except auth.InvalidIdTokenError:
+  #    # Token is invalid
+  #    print("hello")
+  #    raise
+
+def get_or_add_user_by_id_token(id_token):
+  try:
+    uid = validate_firebase_token(id_token)
+  except:
+    raise
+  
+  return get_or_add_user(uid)
+
+def get_or_add_user(uid):
+
+  user = get_user_by_uid(uid)
+
+  if user == None:
+    user = add_user_by_uid(uid)
+
+  return user
+
 
 def add_user(id_token):
   id = uuid.uuid4()
 
-  #uid = validate_firebase_token(id_token)
-
   user_id_list.append({ 'id': str(id) }) #, 'firebase_uid': uid
   return id
+
+def get_user_by_uid(uid):
+  for user in user_id_list:
+    if user.get('uid', None) == uid:
+      return user
+
+  return None
+
+def add_user_by_uid(uid):
+
+  user = { 'uid': str(uid) }
+
+  user_id_list.append(user) #, 'firebase_uid': uid
+  return user
 
 def get_user(user_id):
   print(user_id_list)

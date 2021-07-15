@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.0/firebase-ui-auth.css" />
+</head>
+
+<body>
+
+    <script>
+        function init() {
+            var ui = new firebaseui.auth.AuthUI(firebase.auth());
+            var uiConfig = {
+                signInOptions: [
+                    {
+                        provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+                        signInMethod: firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD
+                    }
+                ],
+                // Other config options...
+            }
+            // Is there an email link sign-in?
+            if (ui.isPendingRedirect()) {
+                ui.start('#firebaseui-auth-container', uiConfig);
+            }
+            // This can also be done via:
+            if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+                ui.start('#firebaseui-auth-container', uiConfig);
+            }
+        }
+
+
+        var interval = setInterval(sdkIsLoaded, 1000);
+
+        function sdkIsLoaded() {
+            if (!firebase) return false
+            return true
+        }
+
+
+
+        setTimeout()
+    </script>
+</body>
+
+</html>

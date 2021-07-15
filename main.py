@@ -13,7 +13,9 @@ from pydantic import BaseModel
 from typing import Optional, List
 
 import user as user_srvc
-
+from user import FireBaseTokenRevokedError, FireBaseTokenInvalidError
+from struct import error
+from firebase_admin import credentials, auth
 
 make_project_dirs()
 
@@ -54,7 +56,20 @@ def read_root():
 
 @app.post("/users")
 async def add_user(id_token: Optional[str] = Header(None)):
-    print(id_token)
+    user = user_srvc.get_or_add_user_by_id_token(id_token)
+    try:
+        print(id_token)
+        user = user_srvc.get_or_add_user_by_id_token(id_token)
+        print("hello 0")
+    except auth.RevokedIdTokenError:
+        print("hello 1")
+        return HTTPException(status_code=400, detail="Invalid id token!")
+    except auth.InvalidIdTokenError:
+        print("hello 2")
+        return HTTPException(status_code=400, detail="Invalid id token!")
+    print(user)
+
+    return user
     user_id = user_srvc.add_user(id_token)
     return {'user_id': user_id}
 
