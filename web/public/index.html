@@ -53,8 +53,22 @@
 
       try {
 
+        var firebaseConfig = {
+            apiKey: "AIzaSyCOD1Cdl9rdIrgMwoFnmSoYH2DkuO7Y8CU",
+            authDomain: "music-generator-9578a.firebaseapp.com",
+            databaseURL: "https://music-generator-9578a-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "music-generator-9578a",
+            storageBucket: "music-generator-9578a.appspot.com",
+            messagingSenderId: "87992880719",
+            appId: "1:87992880719:web:ed8e94977183cb9d4aa43a",
+            measurementId: "G-RKVVZ8Y8BW"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
 
-        var ui = new firebaseui.auth.AuthUI(firebase.auth());
+        var auth = firebase.auth();
+        var ui = new firebaseui.auth.AuthUI(auth);
         ui.start('#firebaseui-auth-container', {
           signInOptions: [
             {
@@ -62,7 +76,7 @@
               requireDisplayName: false
             }
           ],
-          signInSuccessUrl: window.location.href,
+          //signInSuccessUrl: window.location.href,
 
           callbacks: {
             signInSuccessWithAuthResult: function (authResult, redirectUrl) {
@@ -73,7 +87,7 @@
               firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
                 // Send token to your backend via HTTPS
                 // ...
-                console.log(idToken)
+                console.log('idToken', idToken)
               }).catch(function (error) {
                 // Handle error
               });

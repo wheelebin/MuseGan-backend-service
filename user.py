@@ -3,9 +3,10 @@ import firebase_admin
 from firebase_admin import credentials, auth
 from config import ROOT_DIR
 from struct import error
+import redis
+import json
 
-user_id_list = [] # { id: "1234-3123d-a23-sa213", uid: "23123-312-3-123-21-3-32134" }
-tracks_list = [] # { file_name: "qewqe", output_midi_filename: "/dasds/asd/qewqe.mid", user_id: "1234-3123d-a23-sa213"  }
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 cred = credentials.Certificate(ROOT_DIR+"/music-generator-9578a-firebase-adminsdk-sa6xv-7dd5a859e8.json")
 firebase_admin.initialize_app(cred)
@@ -25,94 +26,158 @@ def validate_firebase_token(id_token):
       return uid
   except:
     raise
-  #except auth.RevokedIdTokenError:
-  #    # Token revoked, inform the user to reauthenticate or signOut().
-  #    raise
-  #except auth.InvalidIdTokenError:
-  #    # Token is invalid
-  #    print("hello")
-  #    raise
 
 def get_or_add_user_by_id_token(id_token):
+
   try:
-    uid = validate_firebase_token(id_token)
-  except:
-    raise
+      uid = validate_firebase_token(id_token)
+  except auth.RevokedIdTokenError:
+      return None, "Revoked id token!"
+  except auth.InvalidIdTokenError:
+      return None, "Invalid id token!"
+  except ValueError:
+      return None, "Id token can't be empty!"
+
+  if uid == None:
+      return None, "id token is not valid"
+
+
+  user = get_or_add_user(uid), None
+
+  return user
   
-  return get_or_add_user(uid)
 
 def get_or_add_user(uid):
 
-  user = get_user_by_uid(uid)
+  user = get_user(uid)
 
   if user == None:
-    user = add_user_by_uid(uid)
+    user = add_user(uid)
 
   return user
 
 
-def add_user(id_token):
-  id = uuid.uuid4()
+def r_get(key):
+  result = r.get(key)
+  if result == None:
+    return None
+  return json.loads(result)
+  
+def r_set(key, value):
+  r.set(key, json.dumps(value))
 
-  user_id_list.append({ 'id': str(id) }) #, 'firebase_uid': uid
-  return id
 
-def get_user_by_uid(uid):
-  for user in user_id_list:
-    if user.get('uid', None) == uid:
-      return user
+
+
+
+
+
+
+
+
+
+
+
+def get_all(key, create_if_none=True):
+  list = r_get(key)
+
+  if list == None and create_if_none == True:
+    r_set(key, [])
+    return []
+
+  return list
+
+def get(key, id_key, id_val):
+
+  list = get_all(key)
+
+  for list_item in list:
+    if list_item.get(id_key, None) == id_val:
+      return list_item
 
   return None
 
-def add_user_by_uid(uid):
 
-  user = { 'uid': str(uid) }
+def add(key, value, id_key=None):
 
-  user_id_list.append(user) #, 'firebase_uid': uid
-  return user
 
-def get_user(user_id):
-  print(user_id_list)
-  for user in user_id_list:
-    if user.get('id', None) == user_id:
-      return user
+  list = get_all(key)
 
-  return None
+  if id_key != None:
+    for list_item in list:
+      if list_item[id_key] == value[id_key]:
+        return None
 
-def delete_user(user_id):
-  for i, user in enumerate(user_id_list):
-    if user.get('id', None) == user_id:
-      del user_id_list[i:i+1]
+  list.append(value)
+
+  r_set(key, list)
+
+  return value
+
+
+
+def delete(key, id_key, id_val):
+  list = get_all(key)
+  for i, list_item in enumerate(list):
+    if list_item.get(id_key, None) == id_val:
+      del list[i]
+      r_set(key, list)
       return True
   return False
 
 
 
 
-def add_track(user_id, file_name, output_midi_filename):
-  tracks_list.append({
-    file_name: file_name,
-    output_midi_filename: output_midi_filename,
-    user_id: user_id
+
+
+
+
+
+def get_users():
+  return get_all('users')
+
+def get_user(uid):
+  return get('users', 'uid', uid)
+
+def add_user(uid):
+  new_user = { 'uid': str(uid) }
+  return add('users', new_user, 'uid')
+
+def delete_user(uid):
+  return delete('users', 'uid', uid)
+
+
+
+
+
+
+def add_track(uid, file_name, output_midi_filename):
+  add('tracks', {
+    'file_name': file_name,
+    'output_midi_filename': output_midi_filename,
+    'uid': uid
   })
   return True
 
-def delete_track(user_id, file_name):
-  for i, track in enumerate(tracks_list):
-    if track.get(file_name, None) == file_name and track.get(user_id, None) == user_id:
-      del tracks_list[i:i+1]
+def delete_track(uid, file_name):
+  list = get_all('tracks')
+  for i, list_item in enumerate(list):
+    if list_item.get('file_name', None) == file_name and list_item.get('uid', None) == uid:
+      del list[i]
+      print(list)
+      r_set("tracks", list)
       return True
   return False
 
-def get_tracks_by_user_id(user_id):
+def get_tracks_by_uid(uid):
   tracks = []
-  for track in tracks_list:
-    if track.get(user_id, None) == user_id:
+  for track in get_all('tracks'):
+    if track.get('uid', None) == uid:
       tracks.append(track)
   return tracks
 
 def get_track_by_file_name(file_name):
-  for track in tracks_list:
-    if track.get(file_name, None) == file_name:
+  for track in get_all('tracks'):
+    if track.get('file_name', None) == file_name:
       return track
   return None

@@ -18,6 +18,7 @@ setup(
         "aiofiles",
         # "mido",
         "music21",
+        "redis",
         "fastapi",
         "uvicorn",
         "firebase-admin",

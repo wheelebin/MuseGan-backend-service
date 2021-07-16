@@ -56,26 +56,21 @@ def read_root():
 
 @app.post("/users")
 async def add_user(id_token: Optional[str] = Header(None)):
-    user = user_srvc.get_or_add_user_by_id_token(id_token)
-    try:
-        print(id_token)
-        user = user_srvc.get_or_add_user_by_id_token(id_token)
-        print("hello 0")
-    except auth.RevokedIdTokenError:
-        print("hello 1")
-        return HTTPException(status_code=400, detail="Invalid id token!")
-    except auth.InvalidIdTokenError:
-        print("hello 2")
-        return HTTPException(status_code=400, detail="Invalid id token!")
-    print(user)
+    user, expectedErrMsg = user_srvc.get_or_add_user_by_id_token(id_token)
+
+    if user == None:
+        return HTTPException(status_code=400, detail=expectedErrMsg)
 
     return user
-    user_id = user_srvc.add_user(id_token)
-    return {'user_id': user_id}
 
-@app.get("/users/{user_id}/tracks")
-async def get_user_tracks(user_id: str):
-    tracks = user_srvc.get_tracks_by_user_id(user_id)
+@app.get("/songs")
+async def get_user_tracks(id_token: Optional[str] = Header(None)):
+    user, expectedErrMsg = user_srvc.get_or_add_user_by_id_token(id_token)
+
+    if user == None:
+        return HTTPException(status_code=400, detail=expectedErrMsg)
+
+    tracks = user_srvc.get_tracks_by_uid(user['uid'])
     return tracks
 
 @app.get("/tracks/{file_name}")
@@ -84,14 +79,12 @@ async def get_track(file_name: str):
     return track
 
 @app.post("/songs")
-async def song(gen_type: str, user_id: str, song_request: SongRequest):
+async def song(gen_type: str, song_request: SongRequest, id_token: Optional[str] = Header(None)):
 
-    user = user_srvc.get_user(user_id)
+    user, expectedErrMsg = user_srvc.get_or_add_user_by_id_token(id_token)
+
     if user == None:
-        #user_id = user_srvc.add_user()
-        #user = user_srvc.get_user(user_id)
-        #print('user1', user, user_id)
-        return HTTPException(status_code=400, detail="User id is invalid!")
+        return HTTPException(status_code=400, detail=expectedErrMsg)
 
     ops = {}
     if gen_type == 'ai1' or gen_type == 'ai2':
@@ -110,9 +103,9 @@ async def song(gen_type: str, user_id: str, song_request: SongRequest):
     #except:
     #    return HTTPException(status_code=400, detail="Something went wrong")
 
-    print('user', user, user_id)
+    print('user', user)
 
-    track_added = user_srvc.add_track(user.get('id', None), file_name, output_file_path)
+    track_added = user_srvc.add_track(user.get('uid', None), file_name, output_file_path)
 
     if track_added:
         return { 'file_name': file_name }

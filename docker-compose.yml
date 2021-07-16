@@ -16,5 +16,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./models:/app/models
-  #redis:
-  #  image: "redis:alpine"
+  redis:
+    ports:
+      - "6379:6379"
+    image: "redis:alpine"
