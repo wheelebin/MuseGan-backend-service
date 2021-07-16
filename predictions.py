@@ -122,6 +122,7 @@ def get_check_mid_by_genre(genre, tries=1):
 
         try:
             midi = get_midi_by_genre(genre)
+            print("get_check_mid_by_genre() = ", midi)
             if midi == None or check_midi(midi) != True:
                 print('MIDI CHECK FAILED')
                 continue

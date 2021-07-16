@@ -454,6 +454,8 @@ def check_tones(input_file):
 def tone_invert_main(mid, basenote):
     inverted = MidiFile()
 
+    print(mid.length)
+
     for track in mid.tracks:
 
 
@@ -476,6 +478,9 @@ def tone_invert_main(mid, basenote):
                         new_track.append(message)
 
         inverted.tracks.append(new_track)
+    
+
+    print(inverted.length)
     return inverted
 
 # These will be used but I've not checked them if they work yet
@@ -497,18 +502,22 @@ def invert_midi_main(input_midi):
     
     new_tracks = []
 
+    print(input_midi.length)
+
     for original_track in input_midi.tracks:
         for msg in original_track:
             if msg.type == "set_tempo":
                 tempo = msg.tempo
                 break
 
-        for track_n, original_track in enumerate(input_midi.tracks):
-            new_tracks.append(MidiTrack())
-            for msg in original_track:
-                new_tracks[track_n].append(msg)
+    for track_n, original_track in enumerate(input_midi.tracks):
+        new_tracks.append(MidiTrack())
+        for msg in original_track:
+            new_tracks[track_n].append(msg)
     for track in new_tracks:
         output_midi.tracks.append(track[::-1])
+
+    print(output_midi.length)
     return output_midi
 
 def invert_midi(input_file):

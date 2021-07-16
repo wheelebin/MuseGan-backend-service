@@ -81,10 +81,11 @@ async def get_track(file_name: str):
 @app.post("/songs")
 async def song(gen_type: str, song_request: SongRequest, id_token: Optional[str] = Header(None)):
 
-    user, expectedErrMsg = user_srvc.get_or_add_user_by_id_token(id_token)
+    #user, expectedErrMsg = user_srvc.get_or_add_user_by_id_token(id_token)
+    #if user == None:
+    #    return HTTPException(status_code=400, detail=expectedErrMsg)
 
-    if user == None:
-        return HTTPException(status_code=400, detail=expectedErrMsg)
+    print("Creating song")
 
     ops = {}
     if gen_type == 'ai1' or gen_type == 'ai2':
@@ -103,6 +104,8 @@ async def song(gen_type: str, song_request: SongRequest, id_token: Optional[str]
     #except:
     #    return HTTPException(status_code=400, detail="Something went wrong")
 
+    file_path = get_wav_by_name(file_name)
+    return FileResponse(file_path)
     print('user', user)
 
     track_added = user_srvc.add_track(user.get('uid', None), file_name, output_file_path)

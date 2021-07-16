@@ -11,8 +11,8 @@ class MuseGenKingError(Exception):
 
 class MusicGenKing:
     def __init__(self, generator_file_path):
-        #self.genOne = GenOne(generator_file_path)
-        #self.genTwo = GenTwo()
+        self.genOne = GenOne(generator_file_path)
+        self.genTwo = GenTwo()
         self.genThree = GenThree()
         self.genFour = GenFour()
 
@@ -24,12 +24,18 @@ class MusicGenKing:
             tempo = requested_operations["set_bpm"]
             requested_operations.pop("set_bpm", None)
 
+
         genre = None
-        if "genre" in requested_operations and requested_operations["genre"] != None:
-            genre = requested_operations["genre"]
-            midi_from_genre = get_midi_by_genre(genre) 
-            if midi_from_genre == None:
-                raise MuseGenKingError("Genre does not exist.")
+        if gen_type == "ai3" or gen_type == "ai4":
+            if "genre" in requested_operations and requested_operations["genre"] != None:
+                genre = requested_operations["genre"]
+                midi_from_genre = get_midi_by_genre(genre) 
+                if midi_from_genre == None:
+                    raise MuseGenKingError("Genre does not exist.")
+            else:
+                raise MuseGenKingError("Must specify a genre")
+
+        
 
         print(requested_operations)
         file_name, output_midi_filename = self.predict(gen_type, tempo, genre)
@@ -89,8 +95,8 @@ class MusicGenKing:
 
     def convert_midi_to_wav(self, current_file_name, file_name):
         # Set this in req
-        sound_font = config.SOUNDFONTS_DIR + "/kit2.sf2.SF2"
-        output_file_path = convert_midi_to_wav(current_file_name, file_name, sound_font)
+        #sound_font = config.SOUNDFONTS_DIR + "/kit2.sf2.SF2"
+        output_file_path = convert_midi_to_wav(current_file_name, file_name)
         return output_file_path
 
 
