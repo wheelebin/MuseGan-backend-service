@@ -108,8 +108,10 @@ async def song(gen_type: str, song_request: SongRequest, id_token: Optional[str]
     track_added = user_srvc.add_track(user.get('uid', None), file_name, output_file_path)
 
     if track_added:
-        return { 'file_name': file_name }
-        #return user_srvc.get_track_by_file_name(file_name)
+        #return { 'file_name': file_name }
+        file_path = get_wav_by_name(file_name)
+        return FileResponse(file_path)
+        return user_srvc.get_track_by_file_name(file_name)
 
     return HTTPException(status_code=400, detail="Sound not created")
 

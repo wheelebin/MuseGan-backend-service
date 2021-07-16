@@ -89,8 +89,7 @@ class MusicGenKing:
 
     def convert_midi_to_wav(self, current_file_name, file_name):
         # Set this in req
-        # config.SOUNDFONTS_DIR + "/kit3.sf2"
-        sound_font = ""
+        sound_font = config.SOUNDFONTS_DIR + "/kit2.sf2.SF2"
         output_file_path = convert_midi_to_wav(current_file_name, file_name, sound_font)
         return output_file_path
 

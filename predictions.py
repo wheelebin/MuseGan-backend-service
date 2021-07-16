@@ -186,7 +186,8 @@ class GenFour:
                 midi = get_check_mid_by_genre(genre)
                 if midi == None:
                     continue
-
+                
+                print(midi)
                 file_name, output_midi_filename, *_ = get_file_name_for_saving("mid", file_name)
 
 
